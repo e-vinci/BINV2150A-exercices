@@ -15,6 +15,7 @@ categoriesController.get("/", (req: Request, res: Response) => {
 
   const categories = CategoriesService.getAll();
   const categoriesDTO: CategoryDTO[] = [];
+  //const cat = categories.map()
   for (const category of categories) {
     categoriesDTO.push(CategoriesMapper.toDTO(category));
   }
