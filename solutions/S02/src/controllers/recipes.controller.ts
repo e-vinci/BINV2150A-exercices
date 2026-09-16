@@ -2,12 +2,13 @@ import { Request, Response, Router } from "express";
 import { RecipesMapper } from "../mappers/recipes.mapper";
 import { AuthenticatedRequest } from "../models/auth.model";
 import { RecipeDTO, RecipeFilter } from "../models/recipe.model";
+
 import { ERole } from "../models/user.model";
 import { AuthService } from "../services/auth.service";
 import { CategoriesService } from "../services/categories.service";
 import { LoggerService } from "../services/logger.service";
 import { RecipesService } from "../services/recipes.service";
-import { isNewRecipeDTO, isString } from "../utils/guards";
+import { isNewRecipeDTO, isString, isUpdatedRecipeDTO } from "../utils/guards";
 
 export const recipesController = Router();
 
@@ -115,6 +116,46 @@ recipesController.put("/:id", AuthService.authorize, (req: AuthenticatedRequest,
   if (!updated) return res.sendStatus(500);
 
   return res.sendStatus(204);
+});
+
+/**
+ * @route PATCH /recipes/:id
+ * @summary Met à jour partiellement une recette (auteur ou admin uniquement)
+ * @param {number} id.path - L'ID de la recette
+ * @param {UpdatedRecipeDTO} req.body - Les données de la recette à mettre à jour
+ * @returns {RecipeDTO} 200 - La recette mise à jour
+ * @returns {400} - ID invalide ou données invalides
+ * @returns {401} - Non autorisé
+ * @returns {403} - Accès refusé
+ * @returns {404} - Recette non trouvée
+ */
+recipesController.patch("/:id", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
+  LoggerService.info("[PATCH] /recipes/:id");
+
+  if (!req.user) return res.sendStatus(401);
+  const user = req.user;
+
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id < 1) return res.sendStatus(400);
+
+  const body: unknown = req.body;
+  if (!isUpdatedRecipeDTO(body)) return res.sendStatus(400);
+
+  const recipe = RecipesService.getById(id);
+  if (!recipe) return res.sendStatus(404);
+
+  if (recipe.authorId !== user.id && user.role !== ERole.ADMIN) {
+    return res.sendStatus(403);
+  }
+
+  if (body.categoryId !== undefined && !CategoriesService.getById(body.categoryId)) {
+    return res.sendStatus(400);
+  }
+
+  const updated = RecipesService.patch(id, body);
+  if (!updated) return res.sendStatus(500);
+
+  return res.status(200).json(RecipesMapper.toDTO(updated));
 });
 
 /**

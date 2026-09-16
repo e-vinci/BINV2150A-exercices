@@ -143,6 +143,15 @@ Authorization: {{bobLogin.response.body.token}}
   "steps": []
 }
 
+### Modifier partiellement la recette créée (alice) -> 200
+PATCH {{server}}/recipes/{{createRecipe.response.body.id}}
+Content-Type: application/json
+Authorization: {{login.response.body.token}}
+
+{
+  "servings": 8
+}
+
 ### Supprimer la recette d'alice avec le compte de bob -> 403
 DELETE {{server}}/recipes/{{createRecipe.response.body.id}}
 Authorization: {{bobLogin.response.body.token}}
@@ -154,3 +163,4 @@ Authorization: {{login.response.body.token}}
 ### Supprimer une recette déjà supprimée -> 404
 DELETE {{server}}/recipes/{{createRecipe.response.body.id}}
 Authorization: {{login.response.body.token}}
+

@@ -199,6 +199,20 @@
     - 403 : L'utilisateur n'est pas l'auteur de la recette ou administrateur
     - 404 : Recette inexistante
 
+## PATCH /recipes/:id
+- Description : Met à jour partiellement une recette existante
+- Authentification : Token requis
+- Paramètres :
+    - id (path) : ID de la recette à modifier
+- Body : Données de la recette à modifier
+- Réponses :
+    - 200 : Recette mise à jour
+        - Body : Recette mise à jour
+    - 400 : ID ou données invalides
+    - 401 : Utilisateur non authentifié
+    - 403 : L'utilisateur n'est pas l'auteur de la recette ou administrateur
+    - 404 : Recette inexistante
+
 ## DELETE /recipes/:id
 - Description : Supprime une recette
 - Authentification : Token requis

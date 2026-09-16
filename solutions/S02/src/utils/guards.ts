@@ -1,5 +1,5 @@
-import { NewRecipeDTO } from "../models/recipe.model";
 import { CredentialsDTO, NewUserDTO } from "../models/user.model";
+import { NewRecipeDTO, UpdatedRecipeDTO } from "../models/recipe.model";
 
 /**
  * Type guards : fonctions qui vérifient à l'exécution qu'une valeur inconnue
@@ -60,5 +60,25 @@ export function isNewRecipeDTO(obj: any): obj is NewRecipeDTO {
   if (recipe.tags !== undefined && !Array.isArray(recipe.tags)) return false;
   if (!Array.isArray(recipe.ingredients)) return false;
   if (!Array.isArray(recipe.steps)) return false;
+  return true;
+}
+
+export function isUpdatedRecipeDTO(obj: any): obj is UpdatedRecipeDTO {
+  if (!isObject(obj)) return false;
+
+  const recipe = obj as any;
+
+  if (recipe.title !== undefined && !isNonEmptyString(recipe.title)) return false;
+  if (recipe.description !== undefined && !isString(recipe.description)) return false;
+  if (recipe.imageUrl !== undefined && !isString(recipe.imageUrl)) return false;
+  if (recipe.prepTime !== undefined && (!isNumber(recipe.prepTime) || recipe.prepTime < 0)) return false;
+  if (recipe.cookTime !== undefined && (!isNumber(recipe.cookTime) || recipe.cookTime < 0)) return false;
+  if (recipe.servings !== undefined && (!isNumber(recipe.servings) || recipe.servings < 1)) return false;
+  if (recipe.difficulty !== undefined && (!isNumber(recipe.difficulty) || recipe.difficulty < 1 || recipe.difficulty > 5)) return false;
+  if (recipe.categoryId !== undefined && !isNumber(recipe.categoryId)) return false;
+  if (recipe.tags !== undefined && !Array.isArray(recipe.tags)) return false;
+  if (recipe.ingredients !== undefined && !Array.isArray(recipe.ingredients)) return false;
+  if (recipe.steps !== undefined && !Array.isArray(recipe.steps)) return false;
+
   return true;
 }

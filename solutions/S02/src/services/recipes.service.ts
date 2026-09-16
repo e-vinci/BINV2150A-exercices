@@ -1,5 +1,5 @@
 import { RecipesMapper } from "../mappers/recipes.mapper";
-import { NewRecipe, Recipe, RecipeDBO, RecipeFilter } from "../models/recipe.model";
+import { NewRecipe, Recipe, RecipeDBO, RecipeFilter, UpdatedRecipeDTO } from "../models/recipe.model";
 import { AbstractService } from "./abstract.service";
 import { UsersService } from "./users.service";
 
@@ -151,6 +151,34 @@ export class RecipesService extends AbstractService {
     }
     return recipe;
   }
+
+  /**
+ * Met à jour partiellement une recette.
+ */
+static patch(id: number, updatedRecipe: UpdatedRecipeDTO): Recipe | undefined {
+  const recipes = this.readRecipesDB();
+  const index = recipes.findIndex((recipe) => recipe.id === id);
+  if (index === -1) return undefined;
+
+  const existing = recipes[index];
+
+  const recipe: Recipe = {
+    ...existing,
+    ...updatedRecipe,
+    id: existing.id,
+    authorId: existing.authorId,
+    createdAt: existing.createdAt,
+    updatedAt: new Date(),
+  };
+
+  recipes[index] = recipe;
+
+  if (!this.writeRecipesDB(recipes)) {
+    return undefined;
+  }
+
+  return recipe;
+}
 
   /**
    * Supprime une recette (et la retire des favoris de tous les utilisateurs).
