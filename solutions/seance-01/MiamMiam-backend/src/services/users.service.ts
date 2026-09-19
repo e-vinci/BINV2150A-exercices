@@ -26,12 +26,13 @@ export class UsersService extends AbstractService {
    */
   static getById(id: number): User | undefined {
     const users = this.readUsersDB();
-    for (const user of users) {
-      if (user.id === id) {
-        return user;
-      }
-    }
-    return undefined;
+    // for (const user of users) {
+    //   if (user.id === id) {
+    //     return user;
+    //   }
+    // }
+    return users.find((user) => user.id === id ); // ← .find() remplace la boucle
+    // return undefined;
   }
 
   /**
@@ -39,12 +40,13 @@ export class UsersService extends AbstractService {
    */
   static getByEmail(email: string): User | undefined {
     const users = this.readUsersDB();
-    for (const user of users) {
-      if (user.email.toLowerCase() === email.toLowerCase()) {
-        return user;
-      }
-    }
-    return undefined;
+    // for (const user of users) {
+    //   if (user.email.toLowerCase() === email.toLowerCase()) {
+    //     return user;
+    //   }
+    // }
+    return users.find((user) => user.email.toLowerCase() === email.toLowerCase()); // .find() remplace la bucle 
+    // return undefined;
   }
 
   /**

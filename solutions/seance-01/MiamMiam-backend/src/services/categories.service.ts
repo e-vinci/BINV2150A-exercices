@@ -21,11 +21,12 @@ export class CategoriesService extends AbstractService {
    */
   static getById(id: number): Category | undefined {
     const categories = this.readCategoriesDB();
-    for (const category of categories) {
-      if (category.id === id) {
-        return category;
-      }
-    }
-    return undefined;
+    // for (const category of categories) {
+    //   if (category.id === id) {
+    //     return category;
+    //   }
+    // }
+    // return undefined;
+    return categories.find((category) => category.id === id); // .find() remplace la boucle
   }
 }

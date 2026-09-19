@@ -44,10 +44,10 @@ recipesController.get("/", (req: Request, res: Response) => {
   }
 
   const recipes = RecipesService.getAll(filter);
-  const recipesDTO: RecipeDTO[] = [];
-  for (const recipe of recipes) {
-    recipesDTO.push(RecipesMapper.toDTO(recipe));
-  }
+  const recipesDTO: RecipeDTO[] = recipes.map((recipe) => RecipesMapper.toDTO(recipe));
+  // for (const recipe of recipes) {
+  //   recipesDTO.push(RecipesMapper.toDTO(recipe));
+  // }
   return res.status(200).json(recipesDTO);
 });
 

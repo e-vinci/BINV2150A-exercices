@@ -18,72 +18,86 @@ export class RecipesService extends AbstractService {
    * Toutes les recettes, éventuellement filtrées.
    * Les filtres sont cumulatifs (ET logique).
    */
+  // static getAll(filter: RecipeFilter): Recipe[] {
+  //   const recipes = this.readRecipesDB();
+  //   const result: Recipe[] = [];
+
+  //   for (const recipe of recipes) {
+  //     if (filter.categoryId !== undefined && recipe.categoryId !== filter.categoryId) {
+  //       continue;
+  //     }
+  //     if (filter.authorId !== undefined && recipe.authorId !== filter.authorId) {
+  //       continue;
+  //     }
+  //     if (filter.search !== undefined) {
+  //       const search = filter.search.toLowerCase();
+  //       const inTitle = recipe.title.toLowerCase().includes(search);
+  //       const inDescription = recipe.description.toLowerCase().includes(search);
+  //       if (!inTitle && !inDescription) {
+  //         continue;
+  //       }
+  //     }
+  //     if (filter.ingredient !== undefined) {
+  //       const ingredient = filter.ingredient.toLowerCase();
+  //       const found = recipe.ingredients.some((item) => item.name.toLowerCase().includes(ingredient)); // Changé (programmation fonctionnelle)
+  //       let found = false;
+  //       for (const item of recipe.ingredients) {
+  //         if (item.name.toLowerCase().includes(ingredient)) {
+  //           found = true;
+  //         }
+  //       }
+  //       if (!found) {
+  //         continue;
+  //       }
+  //       if(!found) return false;
+
+  //       if(filter.maxPrepTime !== undefined && recipe.prepTime + recipe.cookTime > filter.maxPrepTime) return true;
+
+  //     }
+  //     if (filter.maxPrepTime !== undefined && recipe.prepTime + recipe.cookTime > filter.maxPrepTime) {
+  //       continue;
+  //     }
+  //     result.push(recipe);
+  //   }
+
+  //   return result;
+  // }
+
   static getAll(filter: RecipeFilter): Recipe[] {
-    const recipes = this.readRecipesDB();
-    const result: Recipe[] = [];
+  const recipes = this.readRecipesDB();
 
-    for (const recipe of recipes) {
-      if (filter.categoryId !== undefined && recipe.categoryId !== filter.categoryId) {
-        continue;
-      }
-      if (filter.authorId !== undefined && recipe.authorId !== filter.authorId) {
-        continue;
-      }
-      if (filter.search !== undefined) {
-        const search = filter.search.toLowerCase();
-        const inTitle = recipe.title.toLowerCase().includes(search);
-        const inDescription = recipe.description.toLowerCase().includes(search);
-        if (!inTitle && !inDescription) {
-          continue;
-        }
-      }
-      if (filter.ingredient !== undefined) {
-        const ingredient = filter.ingredient.toLowerCase();
-        let found = false;
-        for (const item of recipe.ingredients) {
-          if (item.name.toLowerCase().includes(ingredient)) {
-            found = true;
-          }
-        }
-        if (!found) {
-          continue;
-        }
-      }
-      if (filter.maxPrepTime !== undefined && recipe.prepTime + recipe.cookTime > filter.maxPrepTime) {
-        continue;
-      }
-      result.push(recipe);
+  return recipes.filter((recipe) => {
+    if (filter.categoryId !== undefined && recipe.categoryId !== filter.categoryId) return false;
+    if (filter.authorId !== undefined && recipe.authorId !== filter.authorId) return false;
+
+    if (filter.search !== undefined) {
+      const search = filter.search.toLowerCase();
+      const inTitle = recipe.title.toLowerCase().includes(search);
+      const inDescription = recipe.description.toLowerCase().includes(search);
+      if (!inTitle && !inDescription) return false;
     }
 
-    return result;
-  }
-
-  /**
-   * Une recette par son id, ou undefined si elle n'existe pas
-   */
-  static getById(id: number): Recipe | undefined {
-    const recipes = this.readRecipesDB();
-    for (const recipe of recipes) {
-      if (recipe.id === id) {
-        return recipe;
-      }
+    if (filter.ingredient !== undefined) {
+      const ingredient = filter.ingredient.toLowerCase();
+      const found = recipe.ingredients.some((item) => item.name.toLowerCase().includes(ingredient)); // ← .some() remplace la boucle interne
+      if (!found) return false;
     }
-    return undefined;
-  }
 
-  /**
-   * Les recettes dont les ids sont fournis (ex : favoris d'un utilisateur)
-   */
-  static getByIds(ids: number[]): Recipe[] {
-    const recipes = this.readRecipesDB();
-    const result: Recipe[] = [];
-    for (const recipe of recipes) {
-      if (ids.includes(recipe.id)) {
-        result.push(recipe);
-      }
-    }
-    return result;
-  }
+    if (filter.maxPrepTime !== undefined && recipe.prepTime + recipe.cookTime > filter.maxPrepTime) return false;
+
+    return true;
+  });
+}
+
+static getById(id: number): Recipe | undefined {
+  const recipes = this.readRecipesDB();
+  return recipes.find((recipe) => recipe.id === id); // ← .find() remplace la boucle
+}
+
+static getByIds(ids: number[]): Recipe[] {
+  const recipes = this.readRecipesDB();
+  return recipes.filter((recipe) => ids.includes(recipe.id)); // ← .filter() remplace la boucle
+}
 
   /**
    * Crée une recette.

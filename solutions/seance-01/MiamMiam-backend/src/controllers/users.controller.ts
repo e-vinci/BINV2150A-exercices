@@ -19,10 +19,10 @@ usersController.get("/", AuthService.authorize, AuthService.isAdmin, (req: Authe
   LoggerService.info("[GET] /users");
 
   const users = UsersService.getAll();
-  const usersDTO: UserDTO[] = [];
-  for (const user of users) {
-    usersDTO.push(UsersMapper.toDTO(user));
-  }
+  const usersDTO: UserDTO[] = users.map((user) => UsersMapper.toDTO(user)); // Modifié (programmation fonctionnelle)
+  // for (const user of users) {
+  //   usersDTO.push(UsersMapper.toDTO(user));
+  // }
   return res.status(200).json(usersDTO);
 });
 
@@ -39,10 +39,10 @@ usersController.get("/me/favorites", AuthService.authorize, (req: AuthenticatedR
   const user = req.user;
 
   const recipes = RecipesService.getByIds(user.favorites);
-  const recipesDTO: RecipeDTO[] = [];
-  for (const recipe of recipes) {
-    recipesDTO.push(RecipesMapper.toDTO(recipe));
-  }
+  const recipesDTO: RecipeDTO[] = recipes.map((recipe) => RecipesMapper.toDTO(recipe));
+  // for (const recipe of recipes) {
+  //   recipesDTO.push(RecipesMapper.toDTO(recipe));
+  // }
   return res.status(200).json(recipesDTO);
 });
 
