@@ -1,0 +1,315 @@
+@server = http://localhost:3000
+
+### Connexion (alice)
+# @name login
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@vinci.be",
+  "password": "alice"
+}
+
+### Connexion (bob)
+# @name bobLogin
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "bob@vinci.be",
+  "password": "bob"
+}
+
+### Connexion (admin)
+# @name adminLogin
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@miammiam.be",
+  "password": "admin"
+}
+
+### Reset connexion (admin)
+# @name adminLogin
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "mauvaisEmail",
+  "password": "MauvaisMDP"
+}
+
+### Toutes les recettes (public)
+GET {{server}}/recipes
+
+### Filtrer par catégorie (2 = Plat)
+GET {{server}}/recipes?categoryId=2
+
+### Rechercher dans le titre / la description
+GET {{server}}/recipes?search=chocolat
+
+### Recettes contenant un ingrédient
+GET {{server}}/recipes?ingredient=oeuf
+
+### Recettes prêtes en 20 minutes max (préparation + cuisson)
+GET {{server}}/recipes?maxPrepTime=20
+
+### Filtres cumulés
+GET {{server}}/recipes?categoryId=2&maxPrepTime=40&authorId=3
+
+### Une recette (public)
+GET {{server}}/recipes/1
+
+### Recette inexistante -> 404
+GET {{server}}/recipes/999
+
+### Créer une recette (alice)
+# @name createRecipe
+POST {{server}}/recipes
+Content-Type: application/json
+Authorization: {{login.response.body.token}}
+
+{
+  "title": "Omelette aux fines herbes",
+  "description": "Le plat de dépannage par excellence.",
+  "prepTime": 5,
+  "cookTime": 5,
+  "servings": 1,
+  "difficulty": 1,
+  "categoryId": 2,
+  "tags": ["rapide", "végétarien"],
+  "ingredients": [
+    { "name": "oeuf", "quantity": 3, "unit": "pièce" },
+    { "name": "ciboulette", "quantity": 1, "unit": "c. à soupe" },
+    { "name": "beurre", "quantity": 10, "unit": "g" }
+  ],
+  "steps": [
+    "Battre les oeufs avec les herbes, saler, poivrer.",
+    "Cuire dans le beurre chaud en ramenant les bords vers le centre.",
+    "Plier et servir baveuse."
+  ]
+}
+
+### Créer une recette sans token -> 401
+POST {{server}}/recipes
+Content-Type: application/json
+
+{
+  "title": "Rien"
+}
+
+### Créer une recette invalide (difficulty = 7) -> 400
+POST {{server}}/recipes
+Content-Type: application/json
+Authorization: {{login.response.body.token}}
+
+{
+  "title": "Recette bizarre",
+  "description": "",
+  "prepTime": 5,
+  "cookTime": 5,
+  "servings": 1,
+  "difficulty": 7,
+  "categoryId": 2,
+  "ingredients": [],
+  "steps": []
+}
+
+### Récupérer la recette créée
+GET {{server}}/recipes/{{createRecipe.response.body.id}}
+
+### Modifier la recette créée (alice = auteur) -> 204
+PUT {{server}}/recipes/{{createRecipe.response.body.id}}
+Content-Type: application/json
+Authorization: {{login.response.body.token}}
+
+{
+  "title": "Omelette aux fines herbes et fromage",
+  "description": "Le plat de dépannage par excellence, version gourmande.",
+  "prepTime": 5,
+  "cookTime": 6,
+  "servings": 1,
+  "difficulty": 1,
+  "categoryId": 2,
+  "tags": ["rapide", "végétarien", "fromage"],
+  "ingredients": [
+    { "name": "oeuf", "quantity": 3, "unit": "pièce" },
+    { "name": "ciboulette", "quantity": 1, "unit": "c. à soupe" },
+    { "name": "gruyère râpé", "quantity": 30, "unit": "g" },
+    { "name": "beurre", "quantity": 10, "unit": "g" }
+  ],
+  "steps": [
+    "Battre les oeufs avec les herbes, saler, poivrer.",
+    "Cuire dans le beurre chaud, parsemer de fromage.",
+    "Plier et servir baveuse."
+  ]
+}
+
+## Nouveaux tests pour la route PATCH
+### Modifier partiellement la recette d'alice (non authentifié) -> 401
+PATCH {{server}}/recipes/{{createRecipe.response.body.id}}
+Content-Type: application/json
+Authorization: {{login.response.body.token}}
+
+{
+  "tags": ["rapide", "végétarien"],
+  "ingredients": [
+    { "name": "oeuf", "quantity": 3, "unit": "pièce" },
+    { "name": "persil", "quantity": 1, "unit": "c. à soupe" },
+    { "name": "beurre", "quantity": 10, "unit": "g" }
+  ],
+  "steps": [
+    "Battre les oeufs avec les herbes, saler, poivrer.",
+    "Cuire dans le beurre chaud",
+    "Plier et servir baveuse."
+  ]
+}
+
+### Modifier partiellement la recette d'alice (authentifié, non autorisé) -> 403
+PATCH {{server}}/recipes/{{createRecipe.response.body.id}}
+Content-Type: application/json
+Authorization: {{bobLogin.response.body.token}}
+
+{
+  "tags": ["rapide", "végétarien"],
+  "ingredients": [
+    { "name": "oeuf", "quantity": 3, "unit": "pièce" },
+    { "name": "persil", "quantity": 1, "unit": "c. à soupe" },
+    { "name": "beurre", "quantity": 10, "unit": "g" }
+  ],
+  "steps": [
+    "Battre les oeufs avec les herbes, saler, poivrer.",
+    "Cuire dans le beurre chaud",
+    "Plier et servir baveuse."
+  ]
+}
+
+### Modifier partiellement la recette d'alice (auteur OK) -> 200
+PATCH {{server}}/recipes/{{createRecipe.response.body.id}}
+Content-Type: application/json
+Authorization: {{login.response.body.token}}
+
+{
+  "tags": ["rapide", "végétarien"],
+  "ingredients": [
+    { "name": "oeuf", "quantity": 3, "unit": "pièce" },
+    { "name": "persil", "quantity": 1, "unit": "c. à soupe" },
+    { "name": "beurre", "quantity": 10, "unit": "g" }
+  ],
+  "steps": [
+    "Battre les oeufs avec les herbes, saler, poivrer.",
+    "Cuire dans le beurre chaud",
+    "Plier et servir baveuse."
+  ]
+}
+
+### Modifier partiellement la recette d'alice (admin OK) -> 200
+PATCH {{server}}/recipes/{{createRecipe.response.body.id}}
+Content-Type: application/json
+Authorization: {{adminLogin.response.body.token}}
+
+{
+  "tags": ["rapide", "végétarien"],
+  "ingredients": [
+    { "name": "oeuf", "quantity": 3, "unit": "pièce" },
+    { "name": "persil", "quantity": 1, "unit": "c. à soupe" },
+    { "name": "beurre", "quantity": 10, "unit": "g" }
+  ],
+  "steps": [
+    "Battre les oeufs avec les herbes, saler, poivrer.",
+    "Cuire dans le beurre chaud",
+    "Plier et servir baveuse."
+  ]
+}
+
+### Modifier partiellement la recette d'alice (id invalide) -> 400
+PATCH {{server}}/recipes/aze
+Content-Type: application/json
+Authorization: {{adminLogin.response.body.token}}
+
+{
+  "tags": ["rapide", "végétarien"],
+  "ingredients": [
+    { "name": "oeuf", "quantity": 3, "unit": "pièce" },
+    { "name": "persil", "quantity": 1, "unit": "c. à soupe" },
+    { "name": "beurre", "quantity": 10, "unit": "g" }
+  ],
+  "steps": [
+    "Battre les oeufs avec les herbes, saler, poivrer.",
+    "Cuire dans le beurre chaud",
+    "Plier et servir baveuse."
+  ]
+}
+
+### Modifier partiellement la recette d'alice (donnée invalides) -> 400
+PATCH {{server}}/recipes/aze
+Content-Type: application/json
+Authorization: {{adminLogin.response.body.token}}
+
+{
+  "tags": ["rapide", "végétarien"],
+  "ingredients": [
+    { "name": "oeuf", "quantity": 3, "unit": "pièce" },
+    { "name": "persil", "quantity": 1, "unit": "c. à soupe" },
+    { "name": "beurre", "quantity": 10, "unit": "g" }
+  ],
+  "steps": [
+    "Battre les oeufs avec les herbes, saler, poivrer.",
+    "Cuire dans le beurre chaud",
+    "Plier et servir baveuse."
+  ],
+  "frog": "frog"  
+}
+
+
+### Modifier partiellement la recette (recette inexistante) -> 404
+PATCH {{server}}/recipes/999
+Content-Type: application/json
+Authorization: {{adminLogin.response.body.token}}
+
+{
+  "tags": ["rapide", "végétarien"],
+  "ingredients": [
+    { "name": "oeuf", "quantity": 3, "unit": "pièce" },
+    { "name": "persil", "quantity": 1, "unit": "c. à soupe" },
+    { "name": "beurre", "quantity": 10, "unit": "g" }
+  ],
+  "steps": [
+    "Battre les oeufs avec les herbes, saler, poivrer.",
+    "Cuire dans le beurre chaud",
+    "Plier et servir baveuse."
+  ]
+}
+
+
+
+
+### Modifier la recette d'alice avec le compte de bob -> 403
+PUT {{server}}/recipes/{{createRecipe.response.body.id}}
+Content-Type: application/json
+Authorization: {{bobLogin.response.body.token}}
+
+{
+  "title": "Je vole ta recette",
+  "description": "",
+  "prepTime": 1,
+  "cookTime": 1,
+  "servings": 1,
+  "difficulty": 1,
+  "categoryId": 2,
+  "ingredients": [],
+  "steps": []
+}
+
+### Supprimer la recette d'alice avec le compte de bob -> 403
+DELETE {{server}}/recipes/{{createRecipe.response.body.id}}
+Authorization: {{bobLogin.response.body.token}}
+
+### Supprimer la recette créée (alice) -> 204
+DELETE {{server}}/recipes/{{createRecipe.response.body.id}}
+Authorization: {{login.response.body.token}}
+
+### Supprimer une recette déjà supprimée -> 404
+DELETE {{server}}/recipes/{{createRecipe.response.body.id}}
+Authorization: {{login.response.body.token}}
