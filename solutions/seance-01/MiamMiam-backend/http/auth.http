@@ -1,0 +1,73 @@
+@server = http://localhost:3000
+
+### Inscription (renvoie un token, l'utilisateur est directement connecté)
+# @name register
+POST {{server}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "charlie@vinci.be",
+  "password": "charlie",
+  "firstName": "Charlie",
+  "lastName": "Leroy"
+}
+
+### Inscription avec un email déjà utilisé -> 409
+POST {{server}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "alice@vinci.be",
+  "password": "x",
+  "firstName": "Alice",
+  "lastName": "Bis"
+}
+
+### Inscription avec un corps invalide -> 400
+POST {{server}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "pas-un-email",
+  "password": ""
+}
+
+### Connexion
+# @name login
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@vinci.be",
+  "password": "alice"
+}
+
+### Connexion admin
+# @name adminLogin
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@miammiam.be",
+  "password": "admin"
+}
+
+### Mauvais mot de passe -> 401
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@vinci.be",
+  "password": "pas-le-bon"
+}
+
+### Qui suis-je ? (nécessite un token)
+GET {{server}}/auth/me
+Authorization: {{login.response.body.token}}
+
+### Sans token -> 401
+GET {{server}}/auth/me
+
+### Token forgé à la main (base64 d'un email existant)... ça passe ! À corriger plus tard dans le cours.
+GET {{server}}/auth/me
+Authorization: YWRtaW5AbWlhbW1pYW0uYmU=
