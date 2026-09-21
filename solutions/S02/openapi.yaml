@@ -1,0 +1,562 @@
+openapi: 3.0.3
+info:
+  title: API MiamMiam
+  description: API REST du projet fil rouge MiamMiam - BINV2150-A (Javascript avance)
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Serveur de developpement local
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+
+    RegisterRequest:
+      type: object
+      required: [email, password, firstName, lastName]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+
+    Ingredient:
+      type: object
+      required: [name, quantity, unit]
+      properties:
+        name:
+          type: string
+        quantity:
+          type: number
+        unit:
+          type: string
+
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+        prepTime:
+          type: integer
+        cookTime:
+          type: integer
+        servings:
+          type: integer
+        difficulty:
+          type: integer
+          minimum: 1
+          maximum: 5
+        categoryId:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        steps:
+          type: array
+          items:
+            type: string
+        authorId:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    NewRecipeRequest:
+      type: object
+      required: [title, description, prepTime, cookTime, servings, difficulty, categoryId, ingredients, steps]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+        prepTime:
+          type: integer
+        cookTime:
+          type: integer
+        servings:
+          type: integer
+        difficulty:
+          type: integer
+          minimum: 1
+          maximum: 5
+        categoryId:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        steps:
+          type: array
+          items:
+            type: string
+
+    UpdatedRecipeRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+        prepTime:
+          type: integer
+        cookTime:
+          type: integer
+        servings:
+          type: integer
+        difficulty:
+          type: integer
+          minimum: 1
+          maximum: 5
+        categoryId:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        steps:
+          type: array
+          items:
+            type: string
+
+paths:
+  /auth/register:
+    post:
+      summary: Inscription d'un nouvel utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Utilisateur cree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Donnees invalides ou manquantes
+        '409':
+          description: Email deja utilise
+
+  /auth/login:
+    post:
+      summary: Connexion d'un utilisateur existant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Connexion reussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Donnees invalides ou manquantes
+        '401':
+          description: Email ou mot de passe incorrect
+
+  /auth/me:
+    get:
+      summary: Profil de l'utilisateur connecte
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profil utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Non authentifie
+
+  /categories:
+    get:
+      summary: Liste de toutes les categories
+      responses:
+        '200':
+          description: Liste des categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+
+  /categories/{id}:
+    get:
+      summary: Detail d'une categorie
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Categorie trouvee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          description: ID invalide
+        '404':
+          description: Categorie non trouvee
+
+  /recipes:
+    get:
+      summary: Liste des recettes (avec filtres cumulatifs)
+      parameters:
+        - name: categoryId
+          in: query
+          schema:
+            type: integer
+        - name: authorId
+          in: query
+          schema:
+            type: integer
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: ingredient
+          in: query
+          schema:
+            type: string
+        - name: maxPrepTime
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liste des recettes correspondantes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        '400':
+          description: Parametre de filtre invalide
+    post:
+      summary: Creation d'une recette
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewRecipeRequest'
+      responses:
+        '201':
+          description: Recette creee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '400':
+          description: Donnees invalides ou categorie inexistante
+        '401':
+          description: Non authentifie
+
+  /recipes/{id}:
+    get:
+      summary: Detail d'une recette
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Recette trouvee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '400':
+          description: ID invalide
+        '404':
+          description: Recette non trouvee
+    put:
+      summary: Remplacement complet d'une recette
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewRecipeRequest'
+      responses:
+        '204':
+          description: Recette mise a jour
+        '400':
+          description: Donnees invalides ou categorie inexistante
+        '401':
+          description: Non authentifie
+        '403':
+          description: Non autorise (ni auteur ni admin)
+        '404':
+          description: Recette non trouvee
+    patch:
+      summary: Mise a jour partielle d'une recette
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatedRecipeRequest'
+      responses:
+        '200':
+          description: Recette mise a jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '400':
+          description: ID invalide ou donnees invalides
+        '401':
+          description: Non authentifie
+        '403':
+          description: Acces refuse (ni auteur ni admin)
+        '404':
+          description: Recette non trouvee
+    delete:
+      summary: Suppression d'une recette
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Recette supprimee
+        '400':
+          description: ID invalide
+        '401':
+          description: Non authentifie
+        '403':
+          description: Non autorise (ni auteur ni admin)
+        '404':
+          description: Recette non trouvee
+
+  /users:
+    get:
+      summary: Liste de tous les utilisateurs (admin)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Liste des utilisateurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Non authentifie
+        '403':
+          description: Non autorise (non admin)
+
+  /users/{id}:
+    get:
+      summary: Detail d'un utilisateur
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Utilisateur trouve
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: ID invalide
+        '401':
+          description: Non authentifie
+        '404':
+          description: Utilisateur non trouve
+    delete:
+      summary: Suppression d'un utilisateur (admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Utilisateur supprime
+        '400':
+          description: ID invalide
+        '401':
+          description: Non authentifie
+        '403':
+          description: Non autorise (non admin)
+        '404':
+          description: Utilisateur non trouve
+
+  /users/me/favorites:
+    get:
+      summary: Recettes favorites de l'utilisateur connecte
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Liste des recettes favorites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        '401':
+          description: Non authentifie
+
+  /users/me/favorites/{id}:
+    put:
+      summary: Ajouter une recette aux favoris
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Recette ajoutee aux favoris
+        '400':
+          description: ID invalide
+        '401':
+          description: Non authentifie
+        '404':
+          description: Recette non trouvee
+    delete:
+      summary: Retirer une recette des favoris
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Recette retiree des favoris
+        '400':
+          description: ID invalide
+        '401':
+          description: Non authentifie
