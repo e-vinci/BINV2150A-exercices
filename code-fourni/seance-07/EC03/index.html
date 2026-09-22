@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boeuf bourguignon - MiamMiam</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      color: #333;
+      background: #fafafa;
+      line-height: 1.5;
+    }
+    a {
+      color: #e65100;
+    }
+
+    /* En-tête du site */
+    .site-header {
+      background: #e65100;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .site-header nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+    }
+    .site-header nav a {
+      color: white;
+      text-decoration: none;
+    }
+    .site-header nav a.active {
+      text-decoration: underline;
+    }
+
+    /* Mise en page principale */
+    .layout {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 800px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Recette */
+    .recipe {
+      background: white;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .recipe h2 {
+      margin-top: 0;
+      font-size: 2rem;
+    }
+    .subtitle {
+      color: #777;
+      font-style: italic;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin: 1rem 0;
+      padding: 1rem;
+      background: #fff3e0;
+      border-radius: 8px;
+    }
+    .meta div {
+      min-width: 100px;
+    }
+    .meta dt {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: #777;
+    }
+    .meta dd {
+      margin: 0;
+      font-weight: bold;
+    }
+    figure {
+      margin: 1.5rem 0;
+    }
+    figure img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    figcaption {
+      font-size: 0.85rem;
+      color: #777;
+      text-align: center;
+    }
+    .recipe h3 {
+      border-bottom: 2px solid #e65100;
+      padding-bottom: 0.25rem;
+      margin-top: 2rem;
+    }
+    .ingredients li {
+      margin-bottom: 0.25rem;
+    }
+    .steps li {
+      margin-bottom: 0.75rem;
+    }
+    .tip {
+      background: #e8f5e9;
+      border-left: 4px solid #43a047;
+      padding: 1rem;
+      margin: 1.5rem 0;
+    }
+    .tip h3 {
+      border: none;
+      margin: 0 0 0.5rem 0;
+    }
+    .tip blockquote {
+      margin: 0;
+      font-style: italic;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background: #f5f5f5;
+    }
+    details {
+      margin-bottom: 0.5rem;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Colonne latérale */
+    .sidebar section {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar h3 {
+      margin-top: 0;
+    }
+    .author {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .author img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .newsletter label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .newsletter input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .newsletter button {
+      width: 100%;
+      padding: 0.6rem;
+      background: #e65100;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .favorite-btn {
+      background: white;
+      color: #e65100;
+      border: 2px solid #e65100;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    /* Pied de page */
+    .site-footer {
+      background: #333;
+      color: #ccc;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .site-footer a {
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>🍳 MiamMiam</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Accueil</a></li>
+        <li><a href="#" class="active">Recettes</a></li>
+        <li><a href="#">Favoris</a></li>
+        <li><a href="#">Connexion</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="layout">
+
+    <article class="recipe">
+      <h2>Boeuf bourguignon</h2>
+      <p class="subtitle">Le classique du dimanche, qui mijote longtemps.</p>
+
+      <button class="favorite-btn">🤍 Ajouter aux favoris</button>
+
+      <dl class="meta">
+        <div>
+          <dt>Préparation</dt>
+          <dd>30 min</dd>
+        </div>
+        <div>
+          <dt>Cuisson</dt>
+          <dd>3 h</dd>
+        </div>
+        <div>
+          <dt>Portions</dt>
+          <dd>6 personnes</dd>
+        </div>
+        <div>
+          <dt>Difficulté</dt>
+          <dd>★★★★☆</dd>
+        </div>
+        <div>
+          <dt>Catégorie</dt>
+          <dd><a href="#">Plat</a></dd>
+        </div>
+      </dl>
+
+      <figure>
+        <img src="https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=1200" alt="Boeuf bourguignon dans une cocotte">
+        <figcaption>Servi avec des pommes de terre vapeur ou des tagliatelles fraîches.</figcaption>
+      </figure>
+
+      <section>
+        <h3>Ingrédients</h3>
+        <p style="color: #777; font-size: 0.9rem">Pour 6 personnes</p>
+        <ul class="ingredients">
+          <li><strong>1,2 kg</strong> de boeuf à braiser (paleron, macreuse)</li>
+          <li><strong>75 cl</strong> de vin rouge de Bourgogne</li>
+          <li><strong>3</strong> carottes</li>
+          <li><strong>2</strong> oignons</li>
+          <li><strong>150 g</strong> de lardons</li>
+          <li><strong>250 g</strong> de champignons de Paris</li>
+          <li><strong>2 c. à soupe</strong> de farine</li>
+          <li>Sel, poivre, <em>bouquet garni</em></li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Préparation</h3>
+        <ol class="steps">
+          <li>Couper la viande en cubes de 4 cm. La faire dorer dans une cocotte avec un peu d'huile, par petites quantités, puis réserver.</li>
+          <li>Dans la même cocotte, faire revenir les lardons, les oignons émincés et les carottes en rondelles pendant 5 minutes.</li>
+          <li>Remettre la viande, saupoudrer de farine et mélanger 2 minutes (c'est le <em>singeage</em>). Mouiller avec le vin, ajouter le bouquet garni, saler et poivrer.</li>
+          <li>Couvrir et laisser mijoter à feu doux pendant <strong>3 heures</strong>. Ajouter les champignons 30 minutes avant la fin.</li>
+        </ol>
+      </section>
+
+      <aside class="tip">
+        <h3>Le conseil du chef</h3>
+        <blockquote>
+          Préparez-le la veille : le bourguignon est encore meilleur réchauffé, les saveurs ont le temps de se mélanger.
+        </blockquote>
+        <p>— <cite>Alice Dupont</cite></p>
+      </aside>
+
+      <section>
+        <h3>Valeurs nutritionnelles</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Par portion</th>
+              <th>Quantité</th>
+              <th><abbr title="Apports journaliers recommandés">AJR</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Énergie</td>
+              <td>520 kcal</td>
+              <td>26 %</td>
+            </tr>
+            <tr>
+              <td>Protéines</td>
+              <td>45 g</td>
+              <td>90 %</td>
+            </tr>
+            <tr>
+              <td>Lipides</td>
+              <td>28 g</td>
+              <td>40 %</td>
+            </tr>
+            <tr>
+              <td>Glucides</td>
+              <td>12 g</td>
+              <td>5 %</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h3>Questions fréquentes</h3>
+        <details>
+          <summary>Peut-on le congeler ?</summary>
+          <p>Oui, sans problème, jusqu'à 3 mois. Décongelez-le au réfrigérateur la veille et réchauffez-le doucement à la casserole.</p>
+        </details>
+        <details>
+          <summary>Quel vin choisir ?</summary>
+          <p>Un rouge de Bourgogne reste la référence, mais n'importe quel rouge sec et fruité fera l'affaire. Inutile d'y mettre une grande bouteille.</p>
+        </details>
+      </section>
+
+      <hr>
+      <p style="color: #777; font-size: 0.9rem">
+        Publiée le <time datetime="2026-09-01">1er septembre 2026</time> · Dernière modification le <time datetime="2026-09-12">12 septembre 2026</time>
+      </p>
+    </article>
+
+    <aside class="sidebar">
+      <section class="author">
+        <img src="https://i.pravatar.cc/128?img=47" alt="Photo d'Alice Dupont">
+        <div>
+          <h3>Alice Dupont</h3>
+          <p>Passionnée de cuisine française traditionnelle.<br>12 recettes publiées.</p>
+          <a href="#">Voir ses recettes</a>
+        </div>
+      </section>
+
+      <section class="newsletter">
+        <h3>Newsletter</h3>
+        <p>Une nouvelle recette chaque semaine dans votre boîte mail.</p>
+        <form>
+          <label for="email">Votre adresse e-mail</label>
+          <input type="email" id="email" name="email" placeholder="vous@exemple.be">
+          <button type="button">Je m'abonne</button>
+        </form>
+        <p style="font-size: 0.8rem; color: #777">Pas de spam, désabonnement en un clic.</p>
+      </section>
+    </aside>
+
+  </div>
+
+  <!-- Pied de page commun à toutes les pages du site -->
+  <footer class="site-footer">
+    <p>&copy; 2026 MiamMiam &middot; Projet du cours BINV2150-A</p>
+    <p>
+      <a href="#">Mentions légales</a> &middot;
+      <a href="#">Contact</a> &middot;
+      <a href="#">GitHub</a>
+    </p>
+  </footer>
+
+</body>
+</html>
