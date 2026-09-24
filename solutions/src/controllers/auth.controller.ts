@@ -6,7 +6,6 @@ import { AuthService } from "../services/auth.service";
 import { LoggerService } from "../services/logger.service";
 import { UsersService } from "../services/users.service";
 import { isCredentialsDTO, isNewUserDTO } from "../utils/guards";
-//import { verifyToken } from "../utils/auth";
 
 export const authController = Router();
 
@@ -14,23 +13,7 @@ export const authController = Router();
  * POST /auth/register
  * Crée un compte et renvoie un token (l'utilisateur est directement connecté)
  */
-/*authController.post("/register", (req: Request, res: Response) => {
-  LoggerService.info("[POST] /auth/register");
-
-  const body: unknown = req.body;
-  if (!isNewUserDTO(body)) return res.sendStatus(400);
-
-  const newUser = UsersMapper.fromNewDTO(body);
-  const user = UsersService.create(newUser);
-  if (!user) return res.sendStatus(409); // email déjà utilisé
-
-  const token = AuthService.login(user.email, user.password);
-  if (!token) return res.sendStatus(500);
-
-  const tokenDTO: TokenDTO = { token: token };
-  return res.status(201).json(tokenDTO);
-});*/
-authController.post("/register", async (req: Request, res: Response) => {
+authController.post("/register", async (req: Request, res: Response) => { // fonction mofifiée
   const body = req.body;
   if (!isNewUserDTO(body)) return res.sendStatus(400);
   const newUser: NewUser = body;
@@ -49,22 +32,7 @@ authController.post("/register", async (req: Request, res: Response) => {
  * POST /auth/login
  * Vérifie les identifiants et renvoie un token
  */
-/*authController.post("/login", (req: Request, res: Response) => {
-  LoggerService.info("[POST] /auth/login");
-
-  const body: unknown = req.body;
-  if (!isCredentialsDTO(body)) return res.sendStatus(400);
-
-  const email = body.email;
-  const password = body.password;
-
-  const token = AuthService.login(email, password);
-  if (!token) return res.sendStatus(401);
-
-  const tokenDTO: TokenDTO = { token: token };
-  return res.status(200).json(tokenDTO);
-});*/
-authController.post("/login", async (req: Request, res: Response) => {
+authController.post("/login", async (req: Request, res: Response) => { // fonction modifiée
   const body: unknown = req.body;
   if (!isCredentialsDTO(body)) return res.sendStatus(400);
 

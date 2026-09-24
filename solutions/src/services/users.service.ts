@@ -1,7 +1,6 @@
 import { UsersMapper } from "../mappers/users.mapper";
 import { ERole, NewUser, User, UserDBO } from "../models/user.model";
 import { AbstractService } from "./abstract.service";
-import { LoggerService } from "./logger.service";
 import bcrypt from "bcrypt";
 
 export class UsersService extends AbstractService {
@@ -27,12 +26,6 @@ export class UsersService extends AbstractService {
    */
   static getById(id: number): User | undefined {
     const users = this.readUsersDB();
-    /*for (const user of users) {
-      if (user.id === id) {
-        return user;
-      }
-    }
-    return undefined;*/
     return users.find((user) => user.id == id);
   }
 
@@ -41,12 +34,6 @@ export class UsersService extends AbstractService {
    */
   static getByEmail(email: string): User | undefined {
     const users = this.readUsersDB();
-    /*for (const user of users) {
-      if (user.email.toLowerCase() === email.toLowerCase()) {
-        return user;
-      }
-    }
-    return undefined;*/
     return users.find((user) => user.email.toLowerCase() == email.toLowerCase());
   }
 
@@ -54,46 +41,15 @@ export class UsersService extends AbstractService {
    * Crée un utilisateur (rôle "user" par défaut).
    * @returns l'utilisateur créé, ou undefined si l'email est déjà utilisé
    */
-  /*static create(newUser: NewUser): User | undefined {
-    const users = this.readUsersDB();
-
-    if (this.getByEmail(newUser.email)) {
-      LoggerService.error("Email already exists: " + newUser.email);
-      return undefined;
-    }*/
-
-    /*const user: User = {
-      id: UsersService.getNextId(users),
-      email: newUser.email,
-      password: newUser.password, // stocké tel quel... pour l'instant
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      role: ERole.USER,
-      favorites: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };*/
-
-    /*const user: User = { ...newUser, role: ERole.USER, id: UsersService.getNextId(users), favorites: [], createdAt: new Date(), updatedAt: new Date()};
-
-    users.push(user);
-    if (!this.writeUsersDB(users)) {
-      return undefined;
-    }
-    return user;
-  }*/
-
-
-  static async create(newUser: NewUser): Promise<User | undefined> {
+  static async create(newUser: NewUser): Promise<User | undefined> { // fonction modifiée
     if (this.getByEmail(newUser.email)) return undefined;
 
-    // Hacher le mot de passe avant de le stocker
     const passwordHash = await bcrypt.hash(newUser.password, 10);
     const users = this.readUsersDB();
     const user: User = {
       id: UsersService.getNextId(users),
       email: newUser.email,
-      password: passwordHash, // Stocker le hash du mot de passe
+      password: passwordHash,
       firstName: newUser.firstName,
       lastName: newUser.lastName,
       role: ERole.USER,

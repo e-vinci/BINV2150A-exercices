@@ -7,25 +7,7 @@ import { UsersService } from "./users.service";
 import bcrypt from "bcrypt";
 
 export class AuthService {
-  /**
-   * Vérifie les identifiants.
-   * @returns un token si l'email et le mot de passe sont corrects, undefined sinon
-   */
-  /*static login(email: string, password: string): string | undefined {
-    const user = UsersService.getByEmail(email);
-    if (!user) return undefined;
-    if (user.password !== password) return undefined;
-
-    const token = generateToken({
-      id: 1,
-      email: "john@gmail.com",
-      role: "user"
-    });
-
-    console.log(token);
-    return token;
-  }*/
- static async login(email: string, password: string): Promise<string | undefined> {
+ static async login(email: string, password: string): Promise<string | undefined> { // fonction modifiée
     // Récupérer l'utilisateur par email
     const user = UsersService.getByEmail(email);
     if (!user) return undefined; // Utilisateur non trouvé
