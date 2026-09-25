@@ -1,10 +1,12 @@
 import { NextFunction, Response } from "express";
-import { AuthenticatedRequest } from "../models/auth.model";
-import { ERole, User } from "../models/user.model";
-import { generateFakeToken, validateFakeToken } from "../utils/auth";
+import jwt from "jsonwebtoken";
+import { AuthenticatedRequest, TokenPayload } from "../models/auth.model";
+import { ERole } from "../models/user.model";
 import { LoggerService } from "./logger.service";
 import { UsersService } from "./users.service";
 
+// Clé secrète utilisée pour signer et vérifier les JWT
+const SECRET_KEY = process.env.JWT_SECRET!;
 export class AuthService {
   /**
    * Vérifie les identifiants.
@@ -15,7 +17,18 @@ export class AuthService {
     if (!user) return undefined;
     if (user.password !== password) return undefined;
 
-    return generateFakeToken(user.email);
+    // Création du payload du token
+const payload: TokenPayload = {
+  id: user.id,
+  email: user.email,
+  role: user.role,
+};
+
+// Génère un JWT valide pendant 1 jour
+return jwt.sign(payload, SECRET_KEY, {
+  expiresIn: "1d",
+  algorithm: "HS256",
+});
   }
 
   /**
@@ -29,20 +42,21 @@ export class AuthService {
       return res.sendStatus(401);
     }
 
-    let user: User | undefined = undefined;
-    try {
-      const email = validateFakeToken(token);
-      user = UsersService.getByEmail(email);
-    } catch (error) {
-      LoggerService.error(error);
-    }
+   let payload: TokenPayload | undefined = undefined;
 
-    if (!user) {
-      LoggerService.error("Invalid token");
-      return res.sendStatus(401);
-    }
+try {
+  payload = jwt.verify(token, SECRET_KEY) as TokenPayload;
+} catch (error) {
+  LoggerService.error(error);
+}
 
-    req.user = user; // disponible dans les middlewares et routes suivants
+if (!payload) {
+  LoggerService.error("Invalid token");
+  return res.sendStatus(401);
+}
+
+// Stocke les infos du JWT dans la requête
+req.user = payload;
     return next();
   }
 

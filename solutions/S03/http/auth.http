@@ -68,6 +68,6 @@ Authorization: {{login.response.body.token}}
 ### Sans token -> 401
 GET {{server}}/auth/me
 
-### Token forgé à la main (base64 d'un email existant)... ça passe ! À corriger plus tard dans le cours.
+### Token invalide -> 401
 GET {{server}}/auth/me
 Authorization: YWRtaW5AbWlhbW1pYW0uYmU=

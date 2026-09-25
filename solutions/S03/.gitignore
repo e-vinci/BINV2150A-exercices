@@ -5,3 +5,4 @@ logs/
 env/prod.env
 .DS_Store
 *.zip
+env/dev.env

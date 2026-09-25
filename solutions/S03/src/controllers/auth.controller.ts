@@ -62,9 +62,12 @@ authController.post("/login", (req: Request, res: Response) => {
 authController.get("/me", AuthService.authorize, (req: AuthenticatedRequest, res: Response) => {
   LoggerService.info("[GET] /auth/me");
 
-  if (!req.user) return res.sendStatus(401);
-  const user = req.user;
+ if (!req.user) return res.sendStatus(401);
 
-  const userDTO: UserDTO = UsersMapper.toDTO(user);
+// Récupère l'utilisateur complet avec l'id du token
+const user = UsersService.getById(req.user.id);
+if (!user) return res.sendStatus(404);
+
+const userDTO: UserDTO = UsersMapper.toDTO(user);
   return res.status(200).json(userDTO);
 });
