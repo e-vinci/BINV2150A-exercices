@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "email": "admin@miammiam.be",
+    "password": "$2b$10$NSk1mszXgn8USbWIKTDrJeu1tXaewuRL9gRpHlY6F2s3ZN0zCS8BO",
+    "first_name": "Admin",
+    "last_name": "MiamMiam",
+    "role": "admin",
+    "favorites": [
+      1,
+      4
+    ],
+    "created_at": "2026-09-01T08:00:00.000Z",
+    "updated_at": "2026-09-01T08:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "email": "alice@vinci.be",
+    "password": "$2b$10$l0rfoChCSOvCgfNoJlqwPOHyfaUcWiU7Z/FnfHj.OCOIOdT4WKFKe",
+    "first_name": "Alice",
+    "last_name": "Dupont",
+    "role": "user",
+    "favorites": [
+      3
+    ],
+    "created_at": "2026-09-01T08:00:00.000Z",
+    "updated_at": "2026-09-01T08:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "email": "bob@vinci.be",
+    "password": "$2b$10$K3JQNB1DOwYpO0f7QLeQXuw2a8G2j7PwEAB49nqUBH7nx2Vyt879C",
+    "first_name": "Bob",
+    "last_name": "Martin",
+    "role": "user",
+    "favorites": [],
+    "created_at": "2026-09-01T08:00:00.000Z",
+    "updated_at": "2026-09-01T08:00:00.000Z"
+  }
+]
