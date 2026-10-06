@@ -1,0 +1,14 @@
+{
+  "name": "miammiam-api",
+  "version": "1.0.0",
+  "description": "API de démonstration MiamMiam (JSON Server) pour la séance 21",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "json-server --watch db.json --port 3001",
+    "reset": "node reset.js"
+  },
+  "devDependencies": {
+    "json-server": "^0.17.4"
+  }
+}
