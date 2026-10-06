@@ -1,0 +1,13 @@
+@server = http://localhost:3000
+
+### Toutes les catégories
+GET {{server}}/categories
+
+### Une catégorie
+GET {{server}}/categories/3
+
+### Catégorie inexistante -> 404
+GET {{server}}/categories/99
+
+### Id invalide -> 400
+GET {{server}}/categories/abc
