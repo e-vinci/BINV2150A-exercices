@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+
+#root, .app {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  color: #333;
+  background: #fafafa;
+  line-height: 1.5;
+  text-align: left;
+}
+
+a {
+  color: #e65100;
+}
+
+/* Grille principale */
+.layout {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,30 @@
+.site-header {
+  background: #e65100;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.site-header nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.site-header nav a {
+  color: white;
+  text-decoration: none;
+}
+
+.site-header nav a.active {
+  text-decoration: underline;
+}
