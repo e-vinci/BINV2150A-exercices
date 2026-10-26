@@ -1,0 +1,25 @@
+{
+  "name": "miammiam-backend",
+  "version": "1.0.0",
+  "description": "API REST de l'application de recettes MiamMiam - projet fil rouge du cours BINV2150-A",
+  "license": "MIT",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "tsx --env-file=env/dev.env --watch src/main.ts",
+    "build": "tsc -p .",
+    "start": "node --env-file=env/dev.env dist/main.js",
+    "typecheck": "tsc --noEmit -p .",
+    "demo:seed": "tsx scripts/seed.ts",
+    "demo:clear": "tsx scripts/clear.ts",
+    "demo:reset": "tsx scripts/reset.ts"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
