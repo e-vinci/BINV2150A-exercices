@@ -1,0 +1,36 @@
+body {
+      background-color:whitesmoke;
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      color: #333;
+    }
+h1 {
+    color: #e65100;
+}
+.recipe-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #fff;
+}
+.recipe-card h2 {
+    margin-top: 0;
+}
+.recipe-card.quick {
+    border-left: 6px solid #43a047;
+}
+.recipe-card button {
+    background: #e65100;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+}
+#count {
+    color: #777;
+    font-style: italic;
+}
