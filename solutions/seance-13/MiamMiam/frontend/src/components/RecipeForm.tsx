@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import { useState, type SubmitEvent } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 interface RecipeFormData {
   title: string;
@@ -152,6 +154,28 @@ export const RecipeForm = () => {
   const updateStep = (key: number, name: string) => {
     setSteps(
       steps.map((step) => (step.key === key ? { ...step, name: name } : step)),
+    );
+  };
+
+  const switchSteps = (key: number, to: number) => {
+    const idxStep1 = steps.findIndex((s) => s.key === key);
+    if (idxStep1 === -1) return;
+
+    console.log(to);
+
+    const step1 = { ...steps[idxStep1] };
+    const step2 = { ...steps[idxStep1 + to] };
+    const keyStep2 = step2.key;
+
+    setSteps(
+      steps.map((s) => {
+        if (s.key === key) {
+          return { ...step2, key: key };
+        } else if (s.key === keyStep2) {
+          return { ...step1, key: keyStep2 };
+        }
+        return s;
+      }),
     );
   };
 
@@ -321,7 +345,7 @@ export const RecipeForm = () => {
               </Typography>
             )}
 
-            {steps.map((step) => (
+            {steps.map((step, idx) => (
               <Stack key={step.key} direction="row" spacing={1}>
                 <TextField
                   label="Etape"
@@ -335,6 +359,19 @@ export const RecipeForm = () => {
                 >
                   <DeleteIcon />
                 </IconButton>
+
+                <Stack direction={"row"}>
+                  {idx > 0 && (
+                    <IconButton onClick={() => switchSteps(step.key, -1)}>
+                      <ArrowUpwardIcon />
+                    </IconButton>
+                  )}
+                  {steps.length > 1 && idx != steps.length - 1 && (
+                    <IconButton onClick={() => switchSteps(step.key, 1)}>
+                      <ArrowDownwardIcon />
+                    </IconButton>
+                  )}
+                </Stack>
               </Stack>
             ))}
 
