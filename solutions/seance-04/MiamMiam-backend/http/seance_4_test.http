@@ -1,0 +1,35 @@
+@server = http://localhost:3000
+
+###  Register (créer un compte)
+# @name register
+POST {{server}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "john@gmail.com",
+  "password": "MySecurePassword123!",
+  "firstName": "Charlie",
+  "lastName": "Leroy"
+}
+
+
+
+###  Login (se connecter)
+# @name login
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@gmail.com",
+  "password": "MySecurePassword123!"
+}
+
+
+###  Try to login with wrong pwd
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@gmail.com",
+  "password": "NotMySecurePassword123!"
+}
