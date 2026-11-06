@@ -1,0 +1,65 @@
+@server = http://localhost:3000
+
+### Connexion (alice)
+# @name login
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@vinci.be",
+  "password": "alice"
+}
+
+### Connexion (admin)
+# @name adminLogin
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@miammiam.be",
+  "password": "admin"
+}
+
+### Tous les utilisateurs (admin)
+GET {{server}}/users
+Authorization: {{adminLogin.response.body.token}}
+
+### Tous les utilisateurs avec un compte user -> 403
+GET {{server}}/users
+Authorization: {{login.response.body.token}}
+
+### Mon profil complet (alice consulte alice)
+GET {{server}}/users/2
+Authorization: {{login.response.body.token}}
+
+### Le profil public d'un autre utilisateur (alice consulte bob)
+GET {{server}}/users/3
+Authorization: {{login.response.body.token}}
+
+### Utilisateur inexistant -> 404
+GET {{server}}/users/99
+Authorization: {{login.response.body.token}}
+
+### Mes recettes favorites
+GET {{server}}/users/me/favorites
+Authorization: {{login.response.body.token}}
+
+### Ajouter la recette 2 à mes favoris -> 204
+PUT {{server}}/users/me/favorites/2
+Authorization: {{login.response.body.token}}
+
+### Ajouter une recette inexistante -> 404
+PUT {{server}}/users/me/favorites/999
+Authorization: {{login.response.body.token}}
+
+### Retirer la recette 2 de mes favoris -> 204
+DELETE {{server}}/users/me/favorites/2
+Authorization: {{login.response.body.token}}
+
+### Supprimer un utilisateur (admin) -> 204
+DELETE {{server}}/users/3
+Authorization: {{adminLogin.response.body.token}}
+
+### Supprimer un utilisateur avec un compte user -> 403
+DELETE {{server}}/users/2
+Authorization: {{login.response.body.token}}
