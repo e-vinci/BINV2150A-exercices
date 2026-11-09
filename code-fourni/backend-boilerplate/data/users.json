@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "email": "admin@vinci.be",
+    "password": "$2b$10$ufhwZQxU00qnPZhu4A9zOu6WM3DToWlAOLjT6GJzODUws3P6rf9Ye",
+    "first_name": "Admin",
+    "last_name": "Vinci",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "email": "alice@vinci.be",
+    "password": "$2b$10$VBUbfdyaRNYASMrT38Gf1uHRPQHzgTpPCyNJYCA3pNO0eMwGst80y",
+    "first_name": "Alice",
+    "last_name": "Dupont",
+    "role": "user"
+  },
+  {
+    "id": 3,
+    "email": "bob@vinci.be",
+    "password": "$2b$10$n0fZ3mWi0ZlaAZ23U2x19eDE83R4/ebGf38.tnvE5ZeQZz1ipp2e6",
+    "first_name": "Bob",
+    "last_name": "Martin",
+    "role": "user"
+  },
+  {
+    "id": 4,
+    "email": "seb@vinci.be",
+    "password": "$2b$10$jKpHltCmewMTNalcF.STX.vhKju9nFy.wmNgUT7JTCycWk3iFMlKa",
+    "first_name": "Seb",
+    "last_name": "Streb",
+    "role": "user"
+  }
+]
