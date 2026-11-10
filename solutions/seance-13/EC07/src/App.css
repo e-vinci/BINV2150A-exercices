@@ -1,0 +1,191 @@
+#root {
+  min-height: 100vh;
+}
+
+.page {
+  width: min(940px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 48px 0;
+}
+
+.header {
+  margin-bottom: 30px;
+}
+
+.header h1,
+.header p {
+  margin: 0;
+}
+
+.header h1 {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  letter-spacing: -0.06em;
+}
+
+.header > p:last-child {
+  margin-top: 10px;
+  color: #706870;
+}
+
+.eyebrow,
+.product-id {
+  color: #a64b34;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.panel {
+  padding: 24px;
+  margin-top: 20px;
+  border: 1px solid #e3dcd4;
+  border-radius: 16px;
+  background: #fffdf9;
+  box-shadow: 0 8px 24px rgb(73 52 38 / 6%);
+}
+
+.panel h2 {
+  margin: 0 0 18px;
+  font-size: 1.35rem;
+}
+
+.product-list,
+.cart-list {
+  display: grid;
+  gap: 12px;
+}
+
+.product,
+.cart-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #ece5dc;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.product h3,
+.product p,
+.cart-line strong,
+.cart-line span {
+  display: block;
+  margin: 0;
+}
+
+.product h3 {
+  margin-top: 3px;
+}
+
+.product p,
+.cart-line div > span {
+  margin-top: 5px;
+  color: #706870;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 13px;
+  color: #fff;
+  background: #a64b34;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #843a29;
+}
+
+.section-title,
+.total,
+.line-actions {
+  display: flex;
+  align-items: center;
+}
+
+.section-title,
+.total {
+  justify-content: space-between;
+}
+
+.section-title > span {
+  color: #706870;
+  font-size: 0.9rem;
+}
+
+.cart {
+  margin-bottom: 20px;
+}
+
+.empty-cart {
+  margin: 0;
+  color: #706870;
+}
+
+.cart-line {
+  align-items: flex-start;
+}
+
+.line-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.line-actions button {
+  min-width: 34px;
+  padding: 7px 10px;
+}
+
+.line-actions .remove {
+  background: #eee7e0;
+  color: #5d514b;
+}
+
+.quantity {
+  min-width: 24px;
+  text-align: center;
+}
+
+.line-total {
+  min-width: 70px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.total {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #e3dcd4;
+  font-size: 1.15rem;
+}
+
+@media (max-width: 640px) {
+  .page {
+    width: min(100% - 20px, 940px);
+    padding: 28px 0;
+  }
+
+  .panel {
+    padding: 16px;
+  }
+
+  .product,
+  .cart-line {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .product button,
+  .line-actions {
+    width: 100%;
+  }
+
+  .line-actions {
+    justify-content: flex-start;
+  }
+}
