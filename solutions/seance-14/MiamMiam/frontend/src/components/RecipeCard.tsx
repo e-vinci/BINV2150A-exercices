@@ -17,19 +17,24 @@ import { categories } from "../data/categories";
 import { RecipeDetail } from "./RecipeDetail";
 import { useState } from "react";
 import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteIcon from "@mui/icons-material/Delete";
 import logo from "../assets/miammiam.png";
+import { FavoriteButton } from "./FavoriteButton";
 
 interface RecipeCardProps {
   recipe: Recipe;
   onDelete: (id: number) => void;
+  isFavorite: boolean;
+  onToggle: (id: number) => void;
 }
 
-export const RecipeCard = ({ recipe, onDelete }: RecipeCardProps) => {
+export const RecipeCard = ({
+  recipe,
+  onDelete,
+  isFavorite,
+  onToggle,
+}: RecipeCardProps) => {
   const [open, setOpen] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -118,15 +123,10 @@ export const RecipeCard = ({ recipe, onDelete }: RecipeCardProps) => {
               <DeleteIcon />
             </IconButton>
 
-            <IconButton
-              color="primary"
-              aria-label={
-                isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
-              }
-              onClick={() => setIsFavorite((prev) => !prev)}
-            >
-              {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-            </IconButton>
+            <FavoriteButton
+              isFavorite={isFavorite}
+              onToggle={() => onToggle(recipe.id)}
+            />
           </Stack>
         </Stack>
 
