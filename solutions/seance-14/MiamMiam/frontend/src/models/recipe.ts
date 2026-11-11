@@ -19,3 +19,5 @@ export interface Recipe {
   steps: string[];
   authorId: number;
 }
+
+export type NewRecipe = Omit<Recipe, "id" | "authorId">;

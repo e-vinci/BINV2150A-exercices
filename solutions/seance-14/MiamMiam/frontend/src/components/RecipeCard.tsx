@@ -19,8 +19,15 @@ import { useState } from "react";
 import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import DeleteIcon from "@mui/icons-material/Delete";
+import logo from "../assets/miammiam.png";
 
-export const RecipeCard = (recipe: Recipe) => {
+interface RecipeCardProps {
+  recipe: Recipe;
+  onDelete: (id: number) => void;
+}
+
+export const RecipeCard = ({ recipe, onDelete }: RecipeCardProps) => {
   const [open, setOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -38,7 +45,7 @@ export const RecipeCard = (recipe: Recipe) => {
     >
       <CardMedia
         component="img"
-        src={recipe.imageUrl}
+        src={recipe.imageUrl || logo}
         sx={{
           height: 200,
           width: "100%",
@@ -106,15 +113,21 @@ export const RecipeCard = (recipe: Recipe) => {
             MODAL
           </Button>
 
-          <IconButton
-            color="primary"
-            aria-label={
-              isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
-            }
-            onClick={() => setIsFavorite((prev) => !prev)}
-          >
-            {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-          </IconButton>
+          <Stack direction={"row"}>
+            <IconButton color="primary" onClick={() => onDelete(recipe.id)}>
+              <DeleteIcon />
+            </IconButton>
+
+            <IconButton
+              color="primary"
+              aria-label={
+                isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
+              }
+              onClick={() => setIsFavorite((prev) => !prev)}
+            >
+              {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+            </IconButton>
+          </Stack>
         </Stack>
 
         <Modal

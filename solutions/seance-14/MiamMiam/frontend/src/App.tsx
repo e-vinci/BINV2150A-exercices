@@ -4,11 +4,29 @@ import { RecipeList } from "./components/RecipeList";
 import { PageLayout } from "./components/PageLayout";
 import { RecipeForm } from "./components/RecipeForm";
 import { useState } from "react";
+import { recipes as initialRecipes } from "./data/recipes";
+import type { NewRecipe } from "./models/recipe";
 
 const App = () => {
   const [open, setOpen] = useState(false);
+  const [recipes, setRecipes] = useState(initialRecipes);
+
+  // MODAL
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // FORM
+  const addRecipe = (recipe: NewRecipe) => {
+    setRecipes((prev) => [
+      ...prev,
+      { id: Math.max(...recipes.map((r) => r.id)) + 1, ...recipe, authorId: 1 },
+    ]);
+  };
+
+  // CARD
+  const deleteRecipe = (id: number) => {
+    setRecipes(recipes.filter((r) => r.id !== id));
+  };
 
   return (
     <>
@@ -43,14 +61,15 @@ const App = () => {
             alignItems: "center",
           }}
         >
-          <RecipeForm />
+          <RecipeForm onAdd={addRecipe} />
         </Modal>
 
         <Container>
-          <RecipeList />
+          <RecipeList recipes={recipes} onDelete={deleteRecipe} />
         </Container>
       </PageLayout>
     </>
   );
 };
+
 export default App;

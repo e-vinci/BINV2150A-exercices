@@ -1,8 +1,13 @@
 import { Grid, Typography } from "@mui/material";
 import { RecipeCard } from "./RecipeCard";
-import { recipes } from "../data/recipes";
+import type { Recipe } from "../models/recipe";
 
-export const RecipeList = () => {
+interface RecipeListProps {
+  recipes: Recipe[];
+  onDelete: (id: number) => void;
+}
+
+export const RecipeList = ({ recipes, onDelete }: RecipeListProps) => {
   if (recipes.length == 0) return <Typography>NO</Typography>;
 
   return (
@@ -10,7 +15,7 @@ export const RecipeList = () => {
       <Grid container spacing={2}>
         {recipes.map((r) => (
           <Grid key={r.id} size={{ xs: 12, sm: 6, md: 4 }}>
-            <RecipeCard {...r} />
+            <RecipeCard recipe={r} onDelete={onDelete} />
           </Grid>
         ))}
       </Grid>

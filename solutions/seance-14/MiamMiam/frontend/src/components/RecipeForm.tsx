@@ -14,6 +14,11 @@ import { useState, type SubmitEvent } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import type { NewRecipe } from "../models/recipe";
+
+interface RecipeFormProps {
+  onAdd: (recipe: NewRecipe) => void;
+}
 
 interface RecipeFormData {
   title: string;
@@ -39,7 +44,7 @@ interface StepInput {
   name: string;
 }
 
-export const RecipeForm = () => {
+export const RecipeForm = ({ onAdd }: RecipeFormProps) => {
   const [form, setForm] = useState<RecipeFormData>({
     title: "",
     description: "",
@@ -90,20 +95,19 @@ export const RecipeForm = () => {
       return;
     }
 
-    console.log(form);
-
-    console.log(
-      ingredients.map((i) => ({
+    const newRecipe: NewRecipe = {
+      ...form,
+      ingredients: ingredients.map((i) => ({
         name: i.name,
         quantity: Number(i.quantity),
         unit: i.unit,
       })),
-    );
-    console.log(
-      steps.map((s) => ({
-        name: s.name,
-      })),
-    );
+
+      steps: steps.map((s) => s.name),
+      tags: [],
+    };
+
+    onAdd(newRecipe);
 
     setForm({
       title: "",
