@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router";
+import { Link, Outlet } from "react-router";
 import type { User } from "../models/user";
 
 interface LayoutProps {
@@ -10,7 +10,7 @@ interface LayoutProps {
 const Layout = ({ user, isLoggedIn, onLogout }: LayoutProps) => (
   <>
     <header>
-      <NavLink to="/" end>Accueil</NavLink>
+      <Link to="/">Accueil</Link>
       <span className="spacer" />
       {isLoggedIn ? (
         <>
@@ -19,8 +19,8 @@ const Layout = ({ user, isLoggedIn, onLogout }: LayoutProps) => (
         </>
       ) : (
         <>
-          <NavLink to="/login">Connexion</NavLink>
-          <NavLink to="/register">Inscription</NavLink>
+          <Link to="/login">Connexion</Link>
+          <Link to="/register">Inscription</Link>
         </>
       )}
     </header>
