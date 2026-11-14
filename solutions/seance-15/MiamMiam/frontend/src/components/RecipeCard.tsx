@@ -8,18 +8,16 @@ import {
   Button,
   Stack,
   Chip,
-  Modal,
   IconButton,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import type { Recipe } from "../models/recipe";
 import { categories } from "../data/categories";
-import { RecipeDetail } from "./RecipeDetail";
-import { useState } from "react";
 import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
 import DeleteIcon from "@mui/icons-material/Delete";
 import logo from "../assets/miammiam.png";
 import { FavoriteButton } from "./FavoriteButton";
+import { Link } from "react-router";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -34,11 +32,6 @@ export const RecipeCard = ({
   isFavorite,
   onToggle,
 }: RecipeCardProps) => {
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   return (
     <Card
       sx={{
@@ -114,8 +107,12 @@ export const RecipeCard = ({
             justifyContent: "space-between",
           }}
         >
-          <Button variant="contained" onClick={handleOpen}>
-            MODAL
+          <Button
+            variant="contained"
+            component={Link}
+            to={`/recipes/${recipe.id}`}
+          >
+            DETAILS
           </Button>
 
           <Stack direction={"row"}>
@@ -129,19 +126,6 @@ export const RecipeCard = ({
             />
           </Stack>
         </Stack>
-
-        <Modal
-          open={open}
-          onClose={handleClose}
-          sx={{
-            display: "flex",
-            backdropFilter: "hue-rotate(160deg)",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <RecipeDetail {...recipe} />
-        </Modal>
       </CardActions>
     </Card>
   );
