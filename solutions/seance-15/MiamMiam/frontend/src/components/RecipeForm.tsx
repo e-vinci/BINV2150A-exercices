@@ -187,9 +187,6 @@ export const RecipeForm = ({ onAdd }: RecipeFormProps) => {
     <Card
       sx={{
         minWidth: 600,
-        maxHeight: 800,
-        overflowY: "scroll",
-        scrollbarWidth: "thin",
       }}
     >
       <CardContent sx={{ mb: 3 }}>

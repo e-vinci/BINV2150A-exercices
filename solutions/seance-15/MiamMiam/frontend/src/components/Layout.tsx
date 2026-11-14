@@ -11,7 +11,7 @@ import { Link, Outlet } from "react-router";
 
 export const Layout = () => {
   return (
-    <>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <AppBar position="fixed">
         <Toolbar>
           <RestaurantMenuIcon />
@@ -28,7 +28,7 @@ export const Layout = () => {
         </Toolbar>
       </AppBar>
 
-      <Container sx={{ p: 5, mt: 7 }}>
+      <Container sx={{ p: 5, mt: 7, flexGrow: 1 }}>
         <Outlet />
       </Container>
 
@@ -40,6 +40,6 @@ export const Layout = () => {
           &copy; 2026 MiamMiam &middot; Projet du cours BINV2150-A
         </Typography>
       </Toolbar>
-    </>
+    </Box>
   );
 };
