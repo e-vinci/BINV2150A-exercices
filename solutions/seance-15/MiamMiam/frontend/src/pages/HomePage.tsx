@@ -9,7 +9,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import miamiam from "./assets/miammiam.png";
+import miamiam from "../assets/miammiam.png";
 import { RecipeForm } from "../components/RecipeForm";
 import { CategoryFilter } from "../components/CategoryFilter";
 import { SearchBar } from "../components/SearchBar";
