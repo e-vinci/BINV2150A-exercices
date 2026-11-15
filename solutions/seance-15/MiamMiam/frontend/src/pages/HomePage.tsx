@@ -25,7 +25,11 @@ export const HomePage = ({
 
   // SEARCHBAR
   const changeQuery = (q: string) => setQuery(q);
-  const clearQueryAndCategory = () => (setQuery(""), setCategoryId(null));
+  const clearQueryAndCategoryAndFavorite = () => (
+    setQuery(""),
+    setCategoryId(null),
+    setOnlyFavorite(false)
+  );
 
   // CATFILTER
   const selectCategory = (categoryId: number | null) =>
@@ -83,7 +87,10 @@ export const HomePage = ({
             onToggle={toggleFavorite}
           />
         ) : (
-          <Button variant="contained" onClick={clearQueryAndCategory}>
+          <Button
+            variant="contained"
+            onClick={clearQueryAndCategoryAndFavorite}
+          >
             Réinitialiser les filtres
           </Button>
         )}
