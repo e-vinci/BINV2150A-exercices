@@ -8,27 +8,23 @@ import {
   Button,
   Stack,
   Chip,
-  IconButton,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import type { Recipe } from "../models/recipe";
 import { categories } from "../data/categories";
 import SoupKitchenIcon from "@mui/icons-material/SoupKitchen";
-import DeleteIcon from "@mui/icons-material/Delete";
 import logo from "../assets/miammiam.png";
 import { FavoriteButton } from "./FavoriteButton";
 import { Link } from "react-router";
 
 interface RecipeCardProps {
   recipe: Recipe;
-  onDelete: (id: number) => void;
   isFavorite: boolean;
   onToggle: (id: number) => void;
 }
 
 export const RecipeCard = ({
   recipe,
-  onDelete,
   isFavorite,
   onToggle,
 }: RecipeCardProps) => {
@@ -116,10 +112,6 @@ export const RecipeCard = ({
           </Button>
 
           <Stack direction={"row"}>
-            <IconButton color="primary" onClick={() => onDelete(recipe.id)}>
-              <DeleteIcon />
-            </IconButton>
-
             <FavoriteButton
               isFavorite={isFavorite}
               onToggle={() => onToggle(recipe.id)}

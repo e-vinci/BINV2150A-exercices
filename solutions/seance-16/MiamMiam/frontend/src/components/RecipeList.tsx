@@ -4,14 +4,12 @@ import type { Recipe } from "../models/recipe";
 
 interface RecipeListProps {
   recipes: Recipe[];
-  onDelete: (id: number) => void;
   favorites: number[];
   onToggle: (id: number) => void;
 }
 
 export const RecipeList = ({
   recipes,
-  onDelete,
   favorites,
   onToggle,
 }: RecipeListProps) => {
@@ -24,7 +22,6 @@ export const RecipeList = ({
           <Grid key={r.id} size={{ xs: 12, sm: 6, md: 4 }}>
             <RecipeCard
               recipe={r}
-              onDelete={onDelete}
               onToggle={onToggle}
               isFavorite={favorites.some((f) => f === r.id)}
             />

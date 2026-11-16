@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   CardContent,
+  CardMedia,
   IconButton,
   List,
   Stack,
@@ -13,6 +14,7 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useState } from "react";
+import logo from "../assets/miammiam.png";
 
 export const RecipeDetail = (recipe: Recipe) => {
   const [servings, setServings] = useState(recipe.servings);
@@ -24,8 +26,18 @@ export const RecipeDetail = (recipe: Recipe) => {
   const ratio = servings / recipe.servings;
 
   return (
-    <Card sx={{ maxWidth: 700, minWidth: 400 }}>
+    <Card sx={{ maxWidth: 700, minWidth: 600 }}>
       <CardContent>
+        <CardMedia
+          component="img"
+          src={recipe.imageUrl || logo}
+          sx={{
+            height: 400,
+            width: "100%",
+            objectFit: "cover",
+          }}
+        ></CardMedia>
+
         <Typography
           variant="h5"
           component={"h4"}
@@ -34,10 +46,12 @@ export const RecipeDetail = (recipe: Recipe) => {
         >
           {recipe.title}
         </Typography>
+
         <Stack spacing={2} direction={"row"} sx={{ mb: 1 }}>
           <AccessTimeIcon />
           <Typography component={"p"}>{recipe.prepTime}</Typography>
         </Stack>
+
         <Stack
           sx={{
             display: "flex",

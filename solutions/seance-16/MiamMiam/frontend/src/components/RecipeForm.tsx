@@ -15,9 +15,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import type { NewRecipe } from "../models/recipe";
+import { useNavigate } from "react-router";
 
 interface RecipeFormProps {
-  onAdd: (recipe: NewRecipe) => void;
+  onAdd: (recipe: NewRecipe) => number;
 }
 
 interface RecipeFormData {
@@ -57,6 +58,7 @@ export const RecipeForm = ({ onAdd }: RecipeFormProps) => {
   });
   const [ingredients, setIngredients] = useState<IngredientInput[]>([]);
   const [steps, setSteps] = useState<StepInput[]>([]);
+  const navigate = useNavigate();
 
   // VALIDATIONS
   const [submitted, setSubmitted] = useState(false);
@@ -107,7 +109,7 @@ export const RecipeForm = ({ onAdd }: RecipeFormProps) => {
       tags: [],
     };
 
-    onAdd(newRecipe);
+    const id = onAdd(newRecipe);
 
     setForm({
       title: "",
@@ -123,6 +125,7 @@ export const RecipeForm = ({ onAdd }: RecipeFormProps) => {
     setIngredients([]);
     setSteps([]);
     setSubmitted(false);
+    navigate("/recipes/" + id);
   };
 
   // INGREDIENTS FUNCTIONS

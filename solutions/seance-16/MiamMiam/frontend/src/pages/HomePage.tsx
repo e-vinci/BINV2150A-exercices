@@ -5,40 +5,56 @@ import { CategoryFilter } from "../components/CategoryFilter";
 import { SearchBar } from "../components/SearchBar";
 import { RecipeList } from "../components/RecipeList";
 import type { Recipe } from "../models/recipe";
+import { useSearchParams } from "react-router";
 
 interface HomePageProps {
   recipes: Recipe[];
   favorites: number[];
-  deleteRecipe: (id: number) => void;
   toggleFavorite: (id: number) => void;
 }
 
 export const HomePage = ({
   recipes,
   favorites,
-  deleteRecipe,
   toggleFavorite,
 }: HomePageProps) => {
-  const [query, setQuery] = useState("");
-  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [query, setQuery] = useState(searchParams.get("search") ?? "");
+
+  const paramsCatId = searchParams.get("category");
+  const [categoryId, setCategoryId] = useState<number | null>(
+    Number(paramsCatId) || null,
+  );
+
   const [onlyFavorite, setOnlyFavorite] = useState(false);
 
   // SEARCHBAR
-  const changeQuery = (q: string) => setQuery(q);
+  const changeQuery = (q: string) => {
+    setQuery(q);
+    setSearchParams({ search: q });
+  };
+
   const clearQueryAndCategoryAndFavorite = () => (
     setQuery(""),
     setCategoryId(null),
-    setOnlyFavorite(false)
+    setOnlyFavorite(false),
+    setSearchParams({
+      search: "",
+      category: "",
+    })
   );
 
   // CATFILTER
-  const selectCategory = (categoryId: number | null) =>
+  const selectCategory = (categoryId: number | null) => {
     setCategoryId(categoryId);
+    setSearchParams({ category: categoryId + "" });
+  };
 
   const filteredRecipes = recipes.filter((recipe) => {
     const text = `${recipe.title} ${recipe.description}`.toLowerCase();
-    if (!text.includes(query.toLowerCase())) return false;
     if (categoryId !== null && recipe.categoryId !== categoryId) return false;
+    if (!text.includes(query.toLowerCase())) return false;
     // TO FILTER FAVORITES
     if (onlyFavorite && !favorites.some((f) => f === recipe.id)) return false;
     return true;
@@ -82,7 +98,6 @@ export const HomePage = ({
         {filteredRecipes.length > 0 ? (
           <RecipeList
             recipes={filteredRecipes}
-            onDelete={deleteRecipe}
             favorites={favorites}
             onToggle={toggleFavorite}
           />

@@ -14,10 +14,9 @@ const App = () => {
 
   // RECIPES
   const addRecipe = (recipe: NewRecipe) => {
-    setRecipes((prev) => [
-      ...prev,
-      { id: Math.max(...recipes.map((r) => r.id)) + 1, ...recipe, authorId: 1 },
-    ]);
+    const id = Math.max(...recipes.map((r) => r.id)) + 1;
+    setRecipes((prev) => [...prev, { id, ...recipe, authorId: 1 }]);
+    return id;
   };
 
   const deleteRecipe = (id: number) => {
@@ -42,7 +41,6 @@ const App = () => {
               <HomePage
                 recipes={recipes}
                 favorites={favorites}
-                deleteRecipe={deleteRecipe}
                 toggleFavorite={toggleFavorite}
               />
             }
@@ -52,7 +50,12 @@ const App = () => {
             element={<AddRecipePage addRecipe={addRecipe} />}
           ></Route>
 
-          <Route path="/recipes/:id" element={<RecipeDetailsPage />}></Route>
+          <Route
+            path="/recipes/:id"
+            element={
+              <RecipeDetailsPage recipes={recipes} onDelete={deleteRecipe} />
+            }
+          ></Route>
 
           <Route path="*" element={<NotFoundPage />}></Route>
         </Route>
