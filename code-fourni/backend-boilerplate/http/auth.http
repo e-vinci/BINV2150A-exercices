@@ -1,0 +1,71 @@
+# Requêtes de test des routes d'authentification (extension VSCode REST Client).
+
+@server = http://localhost:3000
+
+### Inscription -> 201 { token }
+# @name register
+POST {{server}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "charlie@vinci.be",
+  "password": "charlie",
+  "firstName": "Charlie",
+  "lastName": "Leroy"
+}
+
+### Inscription avec un email déjà utilisé -> 409
+POST {{server}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "alice@vinci.be",
+  "password": "x",
+  "firstName": "Alice",
+  "lastName": "Bis"
+}
+
+### Inscription avec un corps invalide -> 400
+POST {{server}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "pas-un-email",
+  "password": ""
+}
+
+### Connexion -> 200 { token }
+# @name login
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@vinci.be",
+  "password": "alice"
+}
+
+### Connexion administrateur -> 200 { token }
+# @name adminLogin
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@vinci.be",
+  "password": "admin"
+}
+
+### Mauvais mot de passe -> 401
+POST {{server}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@vinci.be",
+  "password": "pas-le-bon"
+}
+
+### Utilisateur connecté -> 200 { id, email, firstName, lastName, role }
+GET {{server}}/auth/me
+Authorization: {{login.response.body.token}}
+
+### Sans token -> 401
+GET {{server}}/auth/me
