@@ -1,0 +1,25 @@
+const NewsletterCard = () => {
+  return (
+    <>
+      <section className="newsletter">
+        <h3>Newsletter</h3>
+        <p>Une nouvelle recette chaque semaine dans votre boîte mail.</p>
+        <form>
+          <label htmlFor="email">Votre adresse e-mail</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="vous@exemple.be"
+          />
+          <button type="button">Je m'abonne</button>
+        </form>
+        <p style={{ fontSize: "0.8rem", color: "#777" }}>
+          Pas de spam, désabonnement en un clic.
+        </p>
+      </section>
+    </>
+  );
+};
+
+export default NewsletterCard;
