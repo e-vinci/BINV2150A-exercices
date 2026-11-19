@@ -19,7 +19,6 @@ export const HomePage = ({
   toggleFavorite,
 }: HomePageProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const [query, setQuery] = useState(searchParams.get("search") ?? "");
 
   const paramsCatId = searchParams.get("category");

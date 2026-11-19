@@ -2,15 +2,20 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { Layout } from "./components/Layout";
 import { HomePage } from "./pages/HomePage";
 import { AddRecipePage } from "./pages/AddRecipePage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { recipes as initialRecipes } from "./data/recipes";
 import type { NewRecipe } from "./models/recipe";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { RecipeDetailsPage } from "./pages/RecipeDetailPage";
+import { loadFavorites, saveFavorites } from "./utils/storage";
 
 const App = () => {
   const [recipes, setRecipes] = useState(initialRecipes);
-  const [favorites, setFavorites] = useState<number[]>([]);
+  const [favorites, setFavorites] = useState<number[]>(() => loadFavorites());
+
+  useEffect(() => {
+    saveFavorites(favorites);
+  }, [favorites]);
 
   // RECIPES
   const addRecipe = (recipe: NewRecipe) => {

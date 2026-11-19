@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from "react-router";
 import { RecipeDetail } from "../components/RecipeDetail";
 import type { Recipe } from "../models/recipe";
 import { Button, Container, Typography } from "@mui/material";
+import { useEffect } from "react";
 
 interface RecipeDetailsPageProps {
   recipes: Recipe[];
@@ -14,6 +15,16 @@ export const RecipeDetailsPage = ({
 }: RecipeDetailsPageProps) => {
   const { id } = useParams();
   const recipeId = Number(id);
+  const recipe = recipes.find((r) => r.id === recipeId);
+
+  useEffect(() => {
+    document.title = recipe?.title
+      ? "Titre de la recette - " + recipe.title
+      : "Recette introuvable";
+    return () => {
+      document.title = "MiamMiam";
+    };
+  }, [recipe?.title]);
 
   const navigate = useNavigate();
 
@@ -26,7 +37,6 @@ export const RecipeDetailsPage = ({
     navigate("/", { replace: true });
   };
 
-  const recipe = recipes.find((r) => r.id === recipeId);
   if (!recipe) {
     return (
       <>

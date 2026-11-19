@@ -10,18 +10,26 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState, type SubmitEvent } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import type { NewRecipe } from "../models/recipe";
 import { useNavigate } from "react-router";
+import {
+  loadDraftForm,
+  loadDraftIngredientsInput,
+  loadStepsInput,
+  saveDraftForm,
+  saveDraftIngredientsInput,
+  saveStepsInput,
+} from "../utils/storage";
 
 interface RecipeFormProps {
   onAdd: (recipe: NewRecipe) => number;
 }
 
-interface RecipeFormData {
+export interface RecipeFormData {
   title: string;
   description: string;
   prepTime: number;
@@ -32,7 +40,7 @@ interface RecipeFormData {
   servings: number;
 }
 
-interface IngredientInput {
+export interface IngredientInput {
   key: number; // identifiant local, pour la key React
   name: string;
   quantity: string; // chaîne, comme les autres champs numériques
@@ -40,25 +48,41 @@ interface IngredientInput {
 }
 type IngredientField = "name" | "quantity" | "unit"; // champs modifiables
 
-interface StepInput {
+export interface StepInput {
   key: number;
   name: string;
 }
 
+export const emptyForm: RecipeFormData = {
+  title: "",
+  description: "",
+  prepTime: 0,
+  cookTime: 0,
+  difficulty: 0,
+  imgUrl: "",
+  categoryId: 1,
+  servings: 0,
+};
+
 export const RecipeForm = ({ onAdd }: RecipeFormProps) => {
-  const [form, setForm] = useState<RecipeFormData>({
-    title: "",
-    description: "",
-    prepTime: 0,
-    cookTime: 0,
-    difficulty: 0,
-    imgUrl: "",
-    categoryId: 1,
-    servings: 0,
-  });
-  const [ingredients, setIngredients] = useState<IngredientInput[]>([]);
-  const [steps, setSteps] = useState<StepInput[]>([]);
+  const [form, setForm] = useState<RecipeFormData>(() => loadDraftForm());
+  const [ingredients, setIngredients] = useState<IngredientInput[]>(() =>
+    loadDraftIngredientsInput(),
+  );
+  const [steps, setSteps] = useState<StepInput[]>(() => loadStepsInput());
   const navigate = useNavigate();
+
+  useEffect(() => {
+    saveDraftForm(form);
+  }, [form]);
+
+  useEffect(() => {
+    saveDraftIngredientsInput(ingredients);
+  }, [ingredients]);
+
+  useEffect(() => {
+    saveStepsInput(steps);
+  }, [steps]);
 
   // VALIDATIONS
   const [submitted, setSubmitted] = useState(false);
@@ -84,6 +108,12 @@ export const RecipeForm = ({ onAdd }: RecipeFormProps) => {
     allStepsHaveAName;
 
   // FORM FUNCTIONS
+  const cleanForm = () => {
+    setForm(emptyForm);
+    setIngredients([]);
+    setSteps([]);
+  };
+
   const handleChange = (name: string, value: string | number) => {
     setForm({ ...form, [name]: value });
   };
@@ -111,19 +141,7 @@ export const RecipeForm = ({ onAdd }: RecipeFormProps) => {
 
     const id = onAdd(newRecipe);
 
-    setForm({
-      title: "",
-      description: "",
-      prepTime: 0,
-      cookTime: 0,
-      difficulty: 0,
-      imgUrl: "",
-      categoryId: 1,
-      servings: 0,
-    });
-
-    setIngredients([]);
-    setSteps([]);
+    cleanForm();
     setSubmitted(false);
     navigate("/recipes/" + id);
   };
@@ -167,8 +185,6 @@ export const RecipeForm = ({ onAdd }: RecipeFormProps) => {
   const switchSteps = (key: number, to: number) => {
     const idxStep1 = steps.findIndex((s) => s.key === key);
     if (idxStep1 === -1) return;
-
-    console.log(to);
 
     const step1 = { ...steps[idxStep1] };
     const step2 = { ...steps[idxStep1 + to] };
@@ -386,9 +402,19 @@ export const RecipeForm = ({ onAdd }: RecipeFormProps) => {
             </Box>
           </Stack>
 
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+            }}
+          >
             <Button variant="contained" type="submit">
               Submit
+            </Button>
+
+            <Button variant="contained" onClick={() => cleanForm()}>
+              Effacer le brouillon
             </Button>
           </Box>
         </Stack>
