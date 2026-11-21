@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Le Comptoir MiamMiam — Carte</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #faf6f0;
+      color: #3e2c23;
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+
+    /* En-tête */
+    .site-header {
+      text-align: center;
+      padding: 40px 0 24px;
+      border-bottom: 2px solid #e8d9c5;
+      margin-bottom: 24px;
+    }
+    .site-header h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.6rem;
+      color: #8c3b1f;
+    }
+    .site-header .tagline {
+      margin: 4px 0 0;
+      font-style: italic;
+      color: #7a6253;
+    }
+    .site-header .address {
+      margin: 8px 0 0;
+      font-size: 0.9rem;
+      color: #7a6253;
+    }
+
+    /* Encadrés d'information */
+    .info-box {
+      border-left: 5px solid;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 20px 0;
+    }
+    .info-box-title {
+      margin: 0 0 4px;
+      font-weight: 700;
+    }
+    .info-box p { margin: 0; }
+    .info-box-info {
+      background: #eef5ec;
+      border-color: #4f8a44;
+    }
+    .info-box-warning {
+      background: #fdf1e3;
+      border-color: #d98324;
+    }
+
+    /* Sections de la carte */
+    .menu-section {
+      margin-top: 36px;
+    }
+    .section-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.7rem;
+      color: #8c3b1f;
+    }
+    .section-subtitle {
+      margin: 2px 0 0;
+      color: #7a6253;
+      font-size: 0.95rem;
+    }
+    .section-content {
+      margin-top: 16px;
+    }
+
+    /* Formules */
+    .formulas {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .formula-card {
+      position: relative;
+      flex: 1 1 260px;
+      background: #fff;
+      border: 1px solid #e8d9c5;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .formula-card-highlighted {
+      border: 2px solid #8c3b1f;
+    }
+    .formula-ribbon {
+      position: absolute;
+      top: -12px;
+      right: 16px;
+      background: #8c3b1f;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .formula-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .formula-name {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+    .formula-price {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #8c3b1f;
+    }
+    .formula-card ul {
+      margin: 12px 0 0;
+      padding-left: 20px;
+    }
+
+    /* Plats */
+    .dish {
+      background: #fff;
+      border: 1px solid #e8d9c5;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+    }
+    .dish-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .dish-name {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+    .dish-prices {
+      white-space: nowrap;
+    }
+    .dish-old-price {
+      text-decoration: line-through;
+      color: #a8968a;
+      margin-right: 8px;
+    }
+    .dish-price {
+      font-weight: 700;
+      color: #8c3b1f;
+    }
+    .dish-description {
+      margin: 4px 0 0;
+      color: #5c463a;
+    }
+    .dish-note {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: #7a6253;
+    }
+
+    /* Badges */
+    .badges {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+    .badge-veggie {
+      background: #e3f1df;
+      color: #2f6b25;
+    }
+    .badge-spicy {
+      background: #fbe1dc;
+      color: #a1301b;
+    }
+    .badge-new {
+      background: #e2ecf8;
+      color: #24508f;
+    }
+
+    /* Pied de page */
+    .site-footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 2px solid #e8d9c5;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+    }
+    .site-footer h2 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+      color: #8c3b1f;
+    }
+    .opening-hours {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      min-width: 280px;
+    }
+    .opening-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 4px 0;
+      border-bottom: 1px dashed #e8d9c5;
+    }
+    .opening-row-closed {
+      color: #a8968a;
+      font-style: italic;
+    }
+    .contact p {
+      margin: 0 0 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="site-header">
+      <h1>Le Comptoir MiamMiam</h1>
+      <p class="tagline">Cuisine maison, produits de saison</p>
+      <p class="address">Rue de l'Exemple 12, 1000 Bruxelles</p>
+    </header>
+
+    <main>
+
+      <div class="info-box info-box-info">
+        <p class="info-box-title">Fait maison</p>
+        <p>Tous nos plats sont préparés sur place, chaque jour, avec des produits de producteurs locaux.</p>
+      </div>
+
+      <section class="menu-section">
+        <h2 class="section-title">Formules du midi</h2>
+        <p class="section-subtitle">Du lundi au vendredi, de 12h à 14h</p>
+        <div class="section-content">
+          <div class="formulas">
+            <div class="formula-card">
+              <div class="formula-header">
+                <h3 class="formula-name">Formule Express</h3>
+                <span class="formula-price">14.50 €</span>
+              </div>
+              <ul>
+                <li>Plat du jour</li>
+                <li>Café ou thé</li>
+              </ul>
+            </div>
+            <div class="formula-card formula-card-highlighted">
+              <span class="formula-ribbon">Le plus choisi</span>
+              <div class="formula-header">
+                <h3 class="formula-name">Formule Complète</h3>
+                <span class="formula-price">19.90 €</span>
+              </div>
+              <ul>
+                <li>Entrée du jour</li>
+                <li>Plat du jour</li>
+                <li>Dessert du jour</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="menu-section">
+        <h2 class="section-title">Entrées</h2>
+        <div class="section-content">
+          <article class="dish">
+            <div class="dish-header">
+              <h3 class="dish-name">Velouté de potimarron</h3>
+              <span class="dish-prices"><span class="dish-price">7.50 €</span></span>
+            </div>
+            <p class="dish-description">Crème de potimarron, graines de courge torréfiées et huile de noisette.</p>
+            <div class="badges">
+              <span class="badge badge-veggie">Végétarien</span>
+            </div>
+          </article>
+          <article class="dish">
+            <div class="dish-header">
+              <h3 class="dish-name">Tartare de saumon</h3>
+              <span class="dish-prices"><span class="dish-price">9.90 €</span></span>
+            </div>
+            <p class="dish-description">Saumon frais, avocat, citron vert et coriandre.</p>
+            <div class="badges">
+              <span class="badge badge-new">Nouveau</span>
+            </div>
+          </article>
+          <article class="dish">
+            <div class="dish-header">
+              <h3 class="dish-name">Planche du Comptoir</h3>
+              <span class="dish-prices"><span class="dish-price">16.00 €</span></span>
+            </div>
+            <p class="dish-note">Pour 2 personnes</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="menu-section">
+        <h2 class="section-title">Plats</h2>
+        <p class="section-subtitle">Servis avec une garniture au choix</p>
+        <div class="section-content">
+          <article class="dish">
+            <div class="dish-header">
+              <h3 class="dish-name">Pâtes Carbonara</h3>
+              <span class="dish-prices"><span class="dish-price">13.50 €</span></span>
+            </div>
+            <p class="dish-description">La vraie recette romaine : guanciale, pecorino, jaune d'oeuf et poivre noir.</p>
+          </article>
+          <article class="dish">
+            <div class="dish-header">
+              <h3 class="dish-name">Curry de légumes</h3>
+              <span class="dish-prices"><span class="dish-price">14.00 €</span></span>
+            </div>
+            <p class="dish-description">Légumes de saison, lait de coco, riz basmati.</p>
+            <div class="badges">
+              <span class="badge badge-veggie">Végétarien</span>
+              <span class="badge badge-spicy">Épicé</span>
+            </div>
+          </article>
+          <article class="dish">
+            <div class="dish-header">
+              <h3 class="dish-name">Burger du chef</h3>
+              <span class="dish-prices"><span class="dish-old-price">18.00 €</span><span class="dish-price">15.50 €</span></span>
+            </div>
+            <p class="dish-description">Boeuf de race locale, cheddar affiné, oignons confits, frites maison.</p>
+            <p class="dish-note">Prix spécial cette semaine</p>
+          </article>
+          <article class="dish">
+            <div class="dish-header">
+              <h3 class="dish-name">Dos de cabillaud</h3>
+              <span class="dish-prices"><span class="dish-price">19.00 €</span></span>
+            </div>
+            <p class="dish-description">Cabillaud rôti, purée de céleri et beurre blanc.</p>
+            <div class="badges">
+              <span class="badge badge-new">Nouveau</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="menu-section">
+        <h2 class="section-title">Desserts</h2>
+        <div class="section-content">
+          <article class="dish">
+            <div class="dish-header">
+              <h3 class="dish-name">Mousse au chocolat</h3>
+              <span class="dish-prices"><span class="dish-price">6.50 €</span></span>
+            </div>
+            <p class="dish-description">Chocolat noir 70 %, fleur de sel.</p>
+            <div class="badges">
+              <span class="badge badge-veggie">Végétarien</span>
+            </div>
+          </article>
+          <article class="dish">
+            <div class="dish-header">
+              <h3 class="dish-name">Tarte Tatin</h3>
+              <span class="dish-prices"><span class="dish-price">7.00 €</span></span>
+            </div>
+            <p class="dish-description">Pommes caramélisées, crème fraîche épaisse.</p>
+            <div class="badges">
+              <span class="badge badge-veggie">Végétarien</span>
+            </div>
+          </article>
+          <article class="dish">
+            <div class="dish-header">
+              <h3 class="dish-name">Café gourmand</h3>
+              <span class="dish-prices"><span class="dish-price">8.50 €</span></span>
+            </div>
+            <p class="dish-description">Un café accompagné de trois mini-desserts du jour.</p>
+            <div class="badges">
+              <span class="badge badge-veggie">Végétarien</span>
+              <span class="badge badge-new">Nouveau</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="info-box info-box-warning">
+        <p class="info-box-title">Allergènes</p>
+        <p>La liste des allergènes de chaque plat est disponible sur demande. Signalez toute allergie à notre équipe avant de commander.</p>
+      </div>
+
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <h2>Horaires</h2>
+        <ul class="opening-hours">
+          <li class="opening-row opening-row-closed"><span>Lundi</span><span>Fermé</span></li>
+          <li class="opening-row"><span>Mardi au vendredi</span><span>12h – 14h, 19h – 22h</span></li>
+          <li class="opening-row"><span>Samedi</span><span>19h – 23h</span></li>
+          <li class="opening-row"><span>Dimanche</span><span>12h – 15h</span></li>
+        </ul>
+      </div>
+      <div class="contact">
+        <h2>Réservations</h2>
+        <p>Par téléphone ou sur place</p>
+        <p>Groupes à partir de 8 personnes : sur réservation uniquement</p>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
