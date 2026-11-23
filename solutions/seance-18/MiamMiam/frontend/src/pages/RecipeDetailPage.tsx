@@ -3,6 +3,7 @@ import { RecipeDetail } from "../components/RecipeDetail";
 import type { Recipe } from "../models/recipe";
 import { Button, Container, Typography } from "@mui/material";
 import { useEffect } from "react";
+import { Timer } from "../components/Timer";
 
 interface RecipeDetailsPageProps {
   recipes: Recipe[];
@@ -63,6 +64,7 @@ export const RecipeDetailsPage = ({
         Retour
       </Button>
       <RecipeDetail {...recipe} />
+      <Timer minutes={recipe.cookTime} />
       <Button variant="contained" onClick={deleteRecipe}>
         Suprrimer
       </Button>

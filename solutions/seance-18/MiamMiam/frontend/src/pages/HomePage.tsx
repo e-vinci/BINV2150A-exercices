@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Chip, Container, Stack, Typography } from "@mui/material";
 import miamiam from "../assets/miammiam.png";
 import { CategoryFilter } from "../components/CategoryFilter";
@@ -20,6 +20,12 @@ export const HomePage = ({
 }: HomePageProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("search") ?? "");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => setDebouncedQuery(query), 300);
+    return () => clearTimeout(timeoutId);
+  }, [query]);
 
   const paramsCatId = searchParams.get("category");
   const [categoryId, setCategoryId] = useState<number | null>(
@@ -53,7 +59,7 @@ export const HomePage = ({
   const filteredRecipes = recipes.filter((recipe) => {
     const text = `${recipe.title} ${recipe.description}`.toLowerCase();
     if (categoryId !== null && recipe.categoryId !== categoryId) return false;
-    if (!text.includes(query.toLowerCase())) return false;
+    if (!text.includes(debouncedQuery.toLowerCase())) return false;
     // TO FILTER FAVORITES
     if (onlyFavorite && !favorites.some((f) => f === recipe.id)) return false;
     return true;
@@ -76,6 +82,7 @@ export const HomePage = ({
       <Container>
         <CategoryFilter selectedId={categoryId} onSelect={selectCategory} />
         <SearchBar value={query} onChange={changeQuery} />
+        {query !== debouncedQuery && <Typography>En recherche...</Typography>}
         <Typography variant="h6">total : {filteredRecipes.length}</Typography>
 
         <Stack direction={"row"} spacing={2} sx={{ mb: 2 }}>
