@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MiamMiam - EC02</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        color: #333;
+      }
+      h1 {
+        color: #e65100;
+      }
+      .toolbar {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      #search {
+        flex: 1;
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+      button {
+        background: #e65100;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+      button.delete-btn {
+        background: #b71c1c;
+        font-size: 0.85rem;
+        padding: 0.3rem 0.6rem;
+      }
+      #add-recipe {
+        margin-bottom: 1rem;
+      }
+      #add-recipe form {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        padding: 1rem;
+        background: #fff3e0;
+        border-radius: 8px;
+      }
+      #add-recipe input {
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+      .recipe-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .recipe-card h2 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1.2rem;
+      }
+      .recipe-card p {
+        margin: 0;
+        color: #777;
+      }
+      .recipe-card.hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MiamMiam</h1>
+
+    <div class="toolbar">
+      <input id="search" type="text" placeholder="Rechercher une recette..." />
+      <button id="add-recipe-btn">Ajouter une recette</button>
+    </div>
+
+    <div id="add-recipe"></div>
+
+    <div id="recipes-list">
+      <div class="recipe-card" data-id="1">
+        <div>
+          <h2>Pâtes Carbonara</h2>
+          <p>⏱️ 25 min</p>
+        </div>
+        <button class="delete-btn">Supprimer</button>
+      </div>
+      <div class="recipe-card" data-id="2">
+        <div>
+          <h2>Soupe de potiron</h2>
+          <p>⏱️ 45 min</p>
+        </div>
+        <button class="delete-btn">Supprimer</button>
+      </div>
+      <div class="recipe-card" data-id="3">
+        <div>
+          <h2>Mousse au chocolat</h2>
+          <p>⏱️ 20 min</p>
+        </div>
+        <button class="delete-btn">Supprimer</button>
+      </div>
+    </div>
+
+    <!-- Liez votre fichier script.js ici -->
+    <script src="script.js"></script>
+  </body>
+</html>
