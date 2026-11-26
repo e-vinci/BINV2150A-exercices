@@ -1,0 +1,72 @@
+import { BrowserRouter, Routes, Route } from "react-router";
+import { Layout } from "./components/Layout";
+import { HomePage } from "./pages/HomePage";
+import { AddRecipePage } from "./pages/AddRecipePage";
+import { useEffect, useState } from "react";
+import { recipes as initialRecipes } from "./data/recipes";
+import type { NewRecipe } from "./models/recipe";
+import { NotFoundPage } from "./pages/NotFoundPage";
+import { RecipeDetailsPage } from "./pages/RecipeDetailPage";
+import { loadFavorites, saveFavorites } from "./utils/storage";
+
+const App = () => {
+  const [recipes, setRecipes] = useState(initialRecipes);
+  const [favorites, setFavorites] = useState<number[]>(() => loadFavorites());
+
+  useEffect(() => {
+    saveFavorites(favorites);
+  }, [favorites]);
+
+  // RECIPES
+  const addRecipe = (recipe: NewRecipe) => {
+    const id = Math.max(...recipes.map((r) => r.id)) + 1;
+    setRecipes((prev) => [...prev, { id, ...recipe, authorId: 1 }]);
+    return id;
+  };
+
+  const deleteRecipe = (id: number) => {
+    setRecipes(recipes.filter((r) => r.id !== id));
+  };
+
+  // FAVORITES
+  const addFavorite = (id: number) => setFavorites((prev) => [...prev, id]);
+  const removeFavorite = (id: number) =>
+    setFavorites(favorites.filter((i) => i !== id));
+
+  const toggleFavorite = (id: number) =>
+    favorites.some((f) => f === id) ? removeFavorite(id) : addFavorite(id);
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route
+            index
+            element={
+              <HomePage
+                recipes={recipes}
+                favorites={favorites}
+                toggleFavorite={toggleFavorite}
+              />
+            }
+          ></Route>
+          <Route
+            path="/recipes/new"
+            element={<AddRecipePage addRecipe={addRecipe} />}
+          ></Route>
+
+          <Route
+            path="/recipes/:id"
+            element={
+              <RecipeDetailsPage recipes={recipes} onDelete={deleteRecipe} />
+            }
+          ></Route>
+
+          <Route path="*" element={<NotFoundPage />}></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default App;
