@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Chip, Container, Stack, Typography } from "@mui/material";
 import miamiam from "../assets/miammiam.png";
 import { CategoryFilter } from "../components/CategoryFilter";
@@ -6,6 +6,7 @@ import { SearchBar } from "../components/SearchBar";
 import { RecipeList } from "../components/RecipeList";
 import type { Recipe } from "../models/recipe";
 import { useSearchParams } from "react-router";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
 
 interface HomePageProps {
   recipes: Recipe[];
@@ -20,13 +21,7 @@ export const HomePage = ({
 }: HomePageProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("search") ?? "");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => setDebouncedQuery(query), 300);
-    return () => clearTimeout(timeoutId);
-  }, [query]);
-
+  const { debouncedQuery } = useDebouncedValue(query, 300);
   const paramsCatId = searchParams.get("category");
   const [categoryId, setCategoryId] = useState<number | null>(
     Number(paramsCatId) || null,

@@ -3,7 +3,7 @@ import {
   type IngredientInput,
   type RecipeFormData,
   type StepInput,
-} from "../components/RecipeForm";
+} from "../hooks/useRecipeDraft";
 
 const isNumberArray = (value: unknown): value is number[] =>
   Array.isArray(value) && value.every((item) => typeof item === "number");
